@@ -16,3 +16,5 @@ import SFLean4.LF.ImpParser
 import SFLean4.LF.ImpCEvalFun
 import SFLean4.LF.Extraction
 import SFLean4.LF.Auto
+import SFLean4.LF.Postscript
+import SFLean4.LF.Bib

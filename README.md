@@ -41,7 +41,8 @@
   - [x] `ImpCEvalFun.lean` (命令式语言求值函数：步数索引与大步语义等价性) *(✅ 20/20 项声明，4/4 道习题已 100% 审计完成)*
   - [x] `Extraction.lean` (代码抽取与 AOT 编译：Coq 抽取 vs. Lean 4 原生编译与驱动测试) *(✅ 端到端可执行解释器驱动 100% 审计完成)*
   - [x] `Auto.lean` (自动化证明策略深入：`solve_by_elim`, `omega`, 延迟元变量与 `Repeat` 语言演进扩展) *(✅ 23/23 项声明与定理 100% 审计完成)*
-  - [ ] `Postscript.lean` / `Bib.lean` (后记与参考文献) *(⏳ 进行中)*
+  - [x] `Postscript.lean` (后记：全卷总结、核心概念纵览与进阶指引) *(✅ 100% 审计完成)*
+  - [x] `Bib.lean` (参考文献：经典文献与文献数据库) *(✅ 100% 审计完成)*
 
 ### 第二卷：程序语言基础 (Volume 2: Programming Language Foundations - PLF) *(规划中)*
 ### 第三卷：函数式算法验证 (Volume 3: Verified Functional Algorithms - VFA) *(规划中)*
