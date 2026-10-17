@@ -1,0 +1,6 @@
+name = "SF-lean4"
+version = "0.1.0"
+defaultTargets = ["SFLean4"]
+
+[[lean_lib]]
+name = "SFLean4"
