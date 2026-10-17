@@ -8,3 +8,4 @@ import SFLean4.LF.Tactics
 import SFLean4.LF.Logic
 import SFLean4.LF.IndProp
 import SFLean4.LF.Maps
+import SFLean4.LF.ProofObjects
