@@ -13,3 +13,4 @@ import SFLean4.LF.IndPrinciples
 import SFLean4.LF.Rel
 import SFLean4.LF.Imp
 import SFLean4.LF.ImpParser
+import SFLean4.LF.ImpCEvalFun
