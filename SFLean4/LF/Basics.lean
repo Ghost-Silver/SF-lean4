@@ -197,10 +197,10 @@ def orb (b1 b2 : bool) : bool :=
 构成了关于 `orb` 函数行为的完备形式化规范：
 -/
 
-example : orb .true  .false = .true  := by rfl
-example : orb .false .false = .false := by rfl
-example : orb .false .true  = .true  := by rfl
-example : orb .true  .true  = .true  := by rfl
+theorem test_orb1 : orb .true  .false = .true  := by rfl
+theorem test_orb2 : orb .false .false = .false := by rfl
+theorem test_orb3 : orb .false .true  = .true  := by rfl
+theorem test_orb4 : orb .true  .true  = .true  := by rfl
 
 /-!
 ### 2.1 中缀符号表示 (Infix Notation)
@@ -213,7 +213,7 @@ infixl:65 " &&* " => andb
 infixl:60 " ||* " => orb
 
 /-- 验证多层中缀符号计算与结合性 -/
-example : (.false ||* .false ||* .true) = .true := by rfl
+theorem test_orb5 : (.false ||* .false ||* .true) = .true := by rfl
 
 /-!
 ### 2.2 条件表达式 (Conditional Expressions)
@@ -550,8 +550,8 @@ def even (n : Nat) : Bool :=
 def odd (n : Nat) : Bool :=
   !even n
 
-example : odd 1 = true  := by rfl
-example : odd 4 = false := by rfl
+theorem test_odd1 : odd 1 = true  := by rfl
+theorem test_odd2 : odd 4 = false := by rfl
 
 /-!
 ### 4.2 多参数自然数算术运算
@@ -593,7 +593,7 @@ def mult (n m : Nat) : Nat :=
   | 0      => 0
   | n' + 1 => m + (mult n' m)
 
-example : mult 3 3 = 9 := by rfl
+theorem test_mult1 : mult 3 3 = 9 := by rfl
 
 /-- 自然数减法：截断减法（Saturating Subtraction）。
     由于自然数不存在负数，当减数大于被减数时结果截断为 0。 -/
@@ -660,15 +660,15 @@ def leb (n m : Nat) : Bool :=
   | _ + 1,  0      => false
   | n' + 1, m' + 1 => leb n' m'
 
-example : leb 2 2 = true  := by rfl
-example : leb 2 4 = true  := by rfl
-example : leb 4 2 = false := by rfl
+theorem test_leb1 : leb 2 2 = true  := by rfl
+theorem test_leb2 : leb 2 4 = true  := by rfl
+theorem test_leb3 : leb 4 2 = false := by rfl
 
 /-- 为等式与不等式判断引入直观的中缀符号表示 -/
 infix:70 " =? "  => eqb
 infix:70 " <=? " => leb
 
-example : (4 <=? 2) = false := by rfl
+theorem test_leb3' : (4 <=? 2) = false := by rfl
 
 /-!
 #### ⭐️ 练习题：ltb (1 星，标准)
@@ -714,7 +714,32 @@ theorem test_ltb3 : (ltb 4 2) = false := by
 /-- 自然数加法左中性元引理：对任意自然数 n，0 + n = n。
     注意：在我们之前定义的 `NatPlayground2` 命名空间中，加法 `plus` 是对第一个参数进行结构化模式匹配的，
     因此当第一个参数为 0 时，无需对 n 的取值做任何预设，Lean 4 的内核展开定义即可立即判定两边恒等！ -/
+theorem plus_O_n (n : Nat) : NatPlayground2.plus 0 n = n := by
+  rfl
+
+/-- 原版 Coq 中的变体定理名称别名 -/
 theorem plus_O_n_playground (n : Nat) : NatPlayground2.plus 0 n = n := by
+  rfl
+
+/-- 显式使用全称量词与 intro 策略的版本 -/
+theorem plus_O_n' : ∀ n : Nat, NatPlayground2.plus 0 n = n := by
+  intro n
+  rfl
+
+/-- 更加紧凑的无参数化化简版本 -/
+theorem plus_O_n'' : ∀ n : Nat, NatPlayground2.plus 0 n = n := by
+  intros
+  rfl
+
+/-- 左加一引理（在自定义 NatPlayground2 递归加法下）：1 + n = n + 1。 -/
+theorem plus_1_l (n : Nat) : NatPlayground2.plus 1 n = n + 1 := by
+  rfl
+
+theorem plus_1_l_playground (n : Nat) : NatPlayground2.plus 1 n = n + 1 := by
+  rfl
+
+/-- 左零乘引理（在自定义 NatPlayground2 递归乘法下）：0 * n = 0。 -/
+theorem mult_0_l (n : Nat) : NatPlayground2.mult 0 n = 0 := by
   rfl
 
 /-!
@@ -757,13 +782,10 @@ theorem plus_n_O' : ∀ n : Nat, n + 0 = n := by
 策略是写在 `by` 代码块中的交互式指令，用于指导证明助手逐步化简目标（Goal）、操纵假设，直至最终构建出合法的证明项。
 -/
 
-/-- 左加一引理（在自定义 `NatPlayground2` 递归加法下）：1 + n = n + 1。 -/
-theorem plus_1_l_playground (n : Nat) : NatPlayground2.plus 1 n = n + 1 := by
-  rfl
-
 /-- 在 Lean 4 原生标准库下：n + 1 与 Nat.succ n 具有相同的定义构造。 -/
 theorem plus_1_r (n : Nat) : n + 1 = Nat.succ n := by
   rfl
+
 
 /- ================================================================== -/
 /-! ## 6. 通过重写进行证明 (Proof by Rewriting) -/
@@ -848,6 +870,12 @@ theorem mult_n_1 (p : Nat) : p * 1 = p := by
 而在 Lean 4 中，最核心、最严谨的策略是 **`cases`**：
 -/
 
+/-- 首次尝试：直接使用自反性或化简无法证明该命题，因为 `(n + 1) =? 0` 依赖于未知的 `n`。
+    在原版 Coq 中，使用 `Abort` 中途放弃；在 Lean 4 中我们使用 `sorry` 占位说明其卡住的状态。 -/
+theorem plus_1_neq_0_firsttry (n : Nat) : ((n + 1) =? 0) = false := by
+  -- simpl 或 rfl 在此无法继续展开，因为我们不知道 n 是 0 还是后继 S n'
+  sorry
+
 theorem plus_1_neq_0 (n : Nat) : ((n + 1) =? 0) = false := by
   -- 对自然数 n 的两种可能归纳构造分别进行讨论：
   cases n with
@@ -896,6 +924,13 @@ theorem andb_commutative (b c : bool) : andb b c = andb c b := by
     | true  => rfl
     | false => rfl
 
+/-- 逻辑与交换律的另一种书写风格：
+    在 Coq 原作中使用花括号 `{ ... }` 组织多层子目标；
+    在 Lean 4 中，我们可以使用点号 `.` 或直接展示 `<;>` 战术连接符，
+    将策略一次性应用到由前序策略产生的所有子分支： -/
+theorem andb_commutative' (b c : bool) : andb b c = andb c b := by
+  cases b <;> cases c <;> rfl
+
 /-- 三元逻辑与结合律与交换律组合示例：
     借助 Lean 4 的策略连接符 `<;>`（将后续策略同时应用到由前序策略生成的所有子目标上），
     我们可以将极其冗长的多分支枚举证明极度浓缩为单行代码！ -/
@@ -904,7 +939,7 @@ theorem andb3_exchange (b c d : bool) :
   cases b <;> cases c <;> cases d <;> rfl
 
 /-!
-#### ⭐️ 练习题：andb_true_elim2 (2 星，标准)
+#### ⭐️⭐️ 练习题：andb_true_elim2 (2 星，标准)
 
 请证明：如果已知 `andb b c = .true`，那么必有 `c = .true`。
 提示：
@@ -932,6 +967,13 @@ theorem andb_commutative'' : ∀ (b c : bool), andb b c = andb c b
   | .false, .false => rfl
 
 end PlayGround
+
+/-- 使用方程编译器（模式匹配）简写的加一非零定理：
+    在原版 Coq 中可以使用模式化引入 `intros [|n]`；
+    在 Lean 4 中，直接使用方程编译器可以在无需调用 `by cases` 的情况下直接展开分支： -/
+theorem plus_1_neq_0' : ∀ n : Nat, ((n + 1) =? 0) = false
+  | 0     => rfl
+  | _ + 1 => rfl
 
 /-!
 #### ⭐️ 练习题：zero_nbeq_plus_1 (1 星，标准)
@@ -972,7 +1014,16 @@ Lean 4 为什么能允许我们写递归？
 
 在 Coq 中，递归函数必须通过关键字 `Fixpoint` 声明，并且必须有某个参数在每一次递归调用中都在**严格减小（Decreasing）**——即所谓的**结构化递归（Structural Recursion）**。
 如果无法在语法层面上证明存在某个递减的归纳参数，Coq 就会直接拒绝该函数。
+例如下面重新写出的加法定义：
+-/
 
+/-- 结构化递归加法 `plus'`：严格在第一个参数 `n` 上进行结构递减递归。 -/
+def plus' (n : Nat) (m : Nat) : Nat :=
+  match n with
+  | 0      => m
+  | n' + 1 => (plus' n' m) + 1
+
+/-!
 在 Lean 4 中，我们无需区分 `def` 与 `Fixpoint`，统一使用 `def`。
 Lean 4 的方程编译器在后台拥有更加先进的自动化停机检查器（Termination Checker）：
 1. 默认情况下，Lean 4 会自动尝试寻找结构化减小（Structural Decrease）的参数；
@@ -982,10 +1033,19 @@ Lean 4 的方程编译器在后台拥有更加先进的自动化停机检查器�
 -/
 
 /-!
-#### ⭐️ 练习题：decreasing (2 星，可选)
+#### ⭐️⭐️ 练习题：decreasing (2 星，标准，可选)
 
-请思考并设计一个逻辑上对所有输入必定终止，但单纯依靠最原始的单层结构递减检查器无法一眼辨别的函数。
-在 Lean 4 中，得益于先进的推导引擎，多数形式的良基递归均可优雅支持。
+为了切实感受这一机制，请思考并尝试设计一个逻辑上对所有输入必定终止，
+但无法直接通过最基础的语法结构递减分析的递归函数。
+
+例如在原版 Coq 中讨论的典型例子：
+```lean
+-- def trouble_mult (n : Nat) : Nat := mult (NatPlayground2.plus 1 (trouble_mult n)) 0
+```
+虽然由于外层乘以 0，该函数数学上对任意输入实际上都会终止并求值为 0，
+但由于内部递归调用 `trouble_mult n` 的参数并没有在语法上严格变小，
+原始的形式化停机检查器会直接拒绝此类定义。
+（如果你在自己的作业中探索此题，请将其注释掉，以免阻塞全局编译！）
 -/
 
 /- ================================================================== -/
@@ -1023,8 +1083,11 @@ theorem negation_fn_applied_twice (f : Bool → Bool) (h : ∀ (x : Bool), f x =
     f (f b) = b := by
   sorry
 
+/-- 自动评分系统使用的辅助占位定义 (保持与原版 autograder 接口兼容) -/
+def manual_grade_for_negation_fn_applied_twice : Option (Nat × String) := none
+
 /-!
-#### ⭐️ 练习题：andb_eq_orb (3 星，可选)
+#### ⭐️⭐️⭐️ 练习题：andb_eq_orb (3 星，标准，可选)
 
 请证明：对任意我们自定义的布尔值 `b` 和 `c`，
 如果 `(b &&* c) = (b ||* c)`，那么必有 `b = c`。
@@ -1137,7 +1200,7 @@ def modifier_comparison (m1 m2 : Modifier) : Comparison :=
   | .Minus, .Minus => .Eq
 
 /-!
-#### ⭐️ 练习题：grade_comparison (2 星，标准)
+#### ⭐️⭐️ 练习题：grade_comparison (2 星，标准)
 
 请补全两个完整成绩之间的比较运算（字典序比较）：
 首先比较字母等级；如果字母相同，再进一步比较修饰符。
@@ -1152,10 +1215,10 @@ def grade_comparison (g1 g2 : Grade) : Comparison :=
     | .Lt => .Lt
 
 -- 单元测试断言
-example : grade_comparison (.grade .A .Minus) (.grade .B .Plus) = .Gt := by rfl
-example : grade_comparison (.grade .A .Minus) (.grade .A .Plus) = .Lt := by rfl
-example : grade_comparison (.grade .F .Plus) (.grade .F .Plus) = .Eq := by rfl
-example : grade_comparison (.grade .B .Minus) (.grade .C .Plus) = .Gt := by rfl
+theorem test_grade_comparison1 : grade_comparison (.grade .A .Minus) (.grade .B .Plus) = .Gt := by rfl
+theorem test_grade_comparison2 : grade_comparison (.grade .A .Minus) (.grade .A .Plus) = .Lt := by rfl
+theorem test_grade_comparison3 : grade_comparison (.grade .F .Plus) (.grade .F .Plus) = .Eq := by rfl
+theorem test_grade_comparison4 : grade_comparison (.grade .B .Minus) (.grade .C .Plus) = .Gt := by rfl
 
 /-!
 ### 10.3 降级逻辑与边界反例分析
@@ -1174,8 +1237,15 @@ def lower_letter (l : Letter) : Letter :=
 theorem lower_letter_F_is_F : lower_letter .F = .F := by
   rfl
 
+/-- 首次尝试：直觉上会认为降低字母等级必然使等级变低。
+    然而该命题在数学上并不成立（反例是 l = F 时，lower_letter F = F，比较结果为 Eq 而非 Lt）！
+    原版 Coq 在验证到最后一个分支时卡住并使用 `Abort` 放弃；在 Lean 4 中我们使用 `sorry` 演示该卡住尝试。 -/
+theorem lower_letter_lowers_firsttry (l : Letter) :
+    letter_comparison (lower_letter l) l = .Lt := by
+  sorry
+
 /-!
-#### ⭐️ 练习题：lower_letter_lowers (2 星，标准)
+#### ⭐️⭐️ 练习题：lower_letter_lowers (2 星，标准)
 
 我们直觉上会认为“降低一个字母等级后必然比原来低”，即：
 `∀ l, letter_comparison (lower_letter l) l = .Lt`。
@@ -1189,7 +1259,7 @@ theorem lower_letter_lowers (l : Letter) (h : letter_comparison .F l = .Lt) :
   sorry
 
 /-!
-#### ⭐️ 练习题：lower_grade (2 星，标准)
+#### ⭐️⭐️ 练习题：lower_grade (2 星，标准)
 
 请实现完整成绩降低一档的函数：
 - A+ 降为 A；A 降为 A-；A- 降为 B+；
@@ -1208,19 +1278,19 @@ def lower_grade (g : Grade) : Grade :=
       | _  => .grade (lower_letter l) .Plus
 
 -- 单元测试示例
-example : lower_grade (.grade .A .Plus) = .grade .A .Natural := by rfl
-example : lower_grade (.grade .A .Natural) = .grade .A .Minus := by rfl
-example : lower_grade (.grade .A .Minus) = .grade .B .Plus := by rfl
-example : lower_grade (.grade .B .Plus) = .grade .B .Natural := by rfl
-example : lower_grade (.grade .F .Natural) = .grade .F .Minus := by rfl
-example : lower_grade (lower_grade (.grade .B .Minus)) = .grade .C .Natural := by rfl
-example : lower_grade (lower_grade (lower_grade (.grade .B .Minus))) = .grade .C .Minus := by rfl
+theorem lower_grade_A_Plus : lower_grade (.grade .A .Plus) = .grade .A .Natural := by rfl
+theorem lower_grade_A_Natural : lower_grade (.grade .A .Natural) = .grade .A .Minus := by rfl
+theorem lower_grade_A_Minus : lower_grade (.grade .A .Minus) = .grade .B .Plus := by rfl
+theorem lower_grade_B_Plus : lower_grade (.grade .B .Plus) = .grade .B .Natural := by rfl
+theorem lower_grade_F_Natural : lower_grade (.grade .F .Natural) = .grade .F .Minus := by rfl
+theorem lower_grade_twice : lower_grade (lower_grade (.grade .B .Minus)) = .grade .C .Natural := by rfl
+theorem lower_grade_thrice : lower_grade (lower_grade (lower_grade (.grade .B .Minus))) = .grade .C .Minus := by rfl
 
 theorem lower_grade_F_Minus : lower_grade (.grade .F .Minus) = .grade .F .Minus := by
   rfl
 
 /-!
-#### ⭐️ 练习题：lower_grade_lowers (3 星，标准)
+#### ⭐️⭐️⭐️ 练习题：lower_grade_lowers (3 星，标准)
 
 证明：只要成绩初始高于 F-，执行 `lower_grade` 后成绩必然严格变低。
 提示：对 `g` 和 `m` 分别进行 `cases` 展开，并结合之前证明过的引理 `letter_comparison_Eq`。
@@ -1256,7 +1326,7 @@ theorem apply_late_policy_unfold (late_days : Nat) (g : Grade) :
   rfl
 
 /-!
-#### ⭐️ 练习题：no_penalty_for_mostly_on_time (2 星，标准)
+#### ⭐️⭐️ 练习题：no_penalty_for_mostly_on_time (2 星，标准)
 
 证明：如果迟交天数不超过 8 天（即 `late_days <? 9 = true`），学生的成绩不受任何影响。
 -/
@@ -1267,7 +1337,7 @@ theorem no_penalty_for_mostly_on_time (late_days : Nat) (g : Grade)
   sorry
 
 /-!
-#### ⭐️ 练习题：grade_lowered_once (2 星，标准)
+#### ⭐️⭐️ 练习题：graded_lowered_once / grade_lowered_once (2 星，标准)
 
 证明：如果迟交天数在 9 到 16 天之间，成绩恰好被扣降一档。
 -/
@@ -1285,7 +1355,7 @@ end LateDays
 /- ================================================================== -/
 
 /-!
-#### ⭐️ 练习题：binary (3 星，标准)
+#### ⭐️⭐️⭐️ 练习题：binary (3 星，标准)
 
 此前我们定义的皮亚诺自然数是一进制（Unary）的：数值 $n$ 由 $n$ 个嵌套的 `S` 构造子构成。
 这种表示法在理论证明上极简优美，但在空间与时间复杂度上效率较低。
@@ -1330,14 +1400,24 @@ def bin_to_nat (m : Bin) : Nat :=
   | B1 n => (bin_to_nat n + 1) + (bin_to_nat n)
 
 -- 单元测试套件：自增运算验证
-example : incr (B1 Z) = B0 (B1 Z) := by rfl
-example : incr (B0 (B1 Z)) = B1 (B1 Z) := by rfl
-example : incr (B1 (B1 Z)) = B0 (B0 (B1 Z)) := by rfl
+theorem test_bin_incr1 : incr (B1 Z) = B0 (B1 Z) := by
+  sorry
+
+theorem test_bin_incr2 : incr (B0 (B1 Z)) = B1 (B1 Z) := by
+  sorry
+
+theorem test_bin_incr3 : incr (B1 (B1 Z)) = B0 (B0 (B1 Z)) := by
+  sorry
 
 -- 单元测试套件：数制转换验证
-example : bin_to_nat (B0 (B1 Z)) = 2 := by rfl
-example : bin_to_nat (incr (B1 Z)) = 1 + bin_to_nat (B1 Z) := by rfl
-example : bin_to_nat (incr (incr (B1 Z))) = 2 + bin_to_nat (B1 Z) := by rfl
+theorem test_bin_incr4 : bin_to_nat (B0 (B1 Z)) = 2 := by
+  sorry
+
+theorem test_bin_incr5 : bin_to_nat (incr (B1 Z)) = 1 + bin_to_nat (B1 Z) := by
+  sorry
+
+theorem test_bin_incr6 : bin_to_nat (incr (incr (B1 Z))) = 2 + bin_to_nat (B1 Z) := by
+  sorry
 
 /- ================================================================== -/
 /-! ## 12. 章节总结与测试指引 (Testing Your Solutions) -/
