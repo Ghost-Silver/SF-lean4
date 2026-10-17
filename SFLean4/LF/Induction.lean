@@ -34,15 +34,21 @@ import SFLean4.LF.Basics
 
 ### 模块编译原理：Coq vs. Lean 4
 
-在 Coq 中：
-- `Require Export Basics.` 指令要求系统必须能够在工作目录或加载路径中找到编译好的二进制接口文件 `Basics.vo`。
-  该 `.vo` 文件由源码文件 `Basics.v` 经过 `coqc` 编译器编译生成，类似于 C 语言中的 `.o` 目标文件或 Java 中的 `.class` 字节码。
-- 为此，Coq 项目通常需要配置 `_CoqProject` 文件（指定逻辑映射路径，如 `-Q . LF`），
-  并通过 `coq_makefile` 生成 `Makefile` 进行自动化依赖跟踪与并行编译。
+在 Coq 原书中：
+- `From LF Require Export Basics.` 指令要求系统必须能够在当前工作目录或逻辑库搜索路径中找到前一章编译好的二进制目标文件 `Basics.vo`。
+  该 `.vo` 文件由源文件 `Basics.v` 经过 Coq 编译器 `coqc` 编译生成，完全类似于 C 语言源码经编译生成的 `.o` 目标文件，或 Java 编译生成的 `.class` 字节码。
+- 为此，Coq 项目通常需要配置 `_CoqProject` 项目配置文件，其中声明如下映射行：
+  ```
+  -Q . LF
+  ```
+  这行配置指示编译器与 IDE（如 Proof General、CoqIDE 或 VSCoq）将当前目录 `.`（包含 `Basics.v` 与 `Induction.v`）映射到逻辑命名空间前缀 `LF`。
+- 在构建方式上，Coq 提供了多种途径：
+  - **IDE 构建**：Proof General 通过配置 `coq-compile-before-require` 为 `t` 实现自动预编译；CoqIDE 通过菜单栏“Compile Buffer”编译；VS Code 则通过终端调用构建脚本。
+  - **命令行构建**：通过实用工具 `coq_makefile -f _CoqProject *.v -o Makefile` 自动生成 `Makefile`，随后使用 `make Basics.vo` 或直接 `make` 进行全量拓扑排序编译；亦可直接手动调用底层编译器 `coqc -Q . LF Basics.v`。
 
-而在现代 **Lean 4** 中：
-- Lean 4 拥有一套高度现代化、开箱即用的包管理与构建工具——**Lake（Lean Make）**。
-- 我们的项目根目录包含配置文件 `lakefile.toml`，其中声明了代码库结构：
+而在现代 **Lean 4** 中，这套流程被整合得更加流畅而现代：
+- Lean 4 拥有一套一体化的现代化工程包管理器与构建系统——**Lake（Lean Make）**。
+- 我们的项目根目录下包含项目清单文件 `lakefile.toml`：
   ```toml
   name = "SF-lean4"
   version = "0.1.0"
@@ -51,14 +57,15 @@ import SFLean4.LF.Basics
   [[lean_lib]]
   name = "SFLean4"
   ```
-- 当我们在根目录执行：
+  它自动将 `SFLean4/` 目录组织为统一的顶层命名空间库，替代了 Coq 繁复的手动 `_CoqProject` 与 `Makefile` 生成流程。
+- 当我们在终端执行：
   ```bash
   lake build
   ```
-  Lake 会自动扫描源文件之间的 `import` 拓扑依赖关系，并仅在依赖项发生变动时重新编译对应的模块。
-  Lake 生成的编译产物存放在 `.lake/build/lib/` 目录下：
-  - `.olean` 文件（Object Lean）：包含经过完全展开、类型检查与全称量化处理的编译后内核对象抽象语法树与环境元数据；
-  - `.ilean` 文件（Interactive Lean）：包含语言服务器协议（LSP）用于代码跳转、悬停文档提示与重构的交互式符号索引信息。
+  Lake 会智能解析源码文件顶部的 `import` 语句，自动计算模块依赖图（DAG），并仅当被依赖的源文件发生变更时执行增量编译。
+- Lake 编译生成的二进制制品存放在 `.lake/build/lib/` 目录下：
+  - **`.olean` 文件（Object Lean）**：对应于 Coq 的 `.vo` 文件，包含经完全展开、形式化类型检验与去糖化处理后的抽象语法树与符号环境元数据；
+  - **`.ilean` 文件（Interactive Lean）**：包含供语言服务器（LSP）使用的交互式索引，为编辑器提供丝滑的代码悬停、定理跳转、符号重构与实时 Infoview 目标渲染。
 
 接下来，为了使我们在上一章中定义的皮亚诺减法 `minus` 以及二进制数据类型 `Bin` 的构造子能够在全局作用域中直接使用，
 我们在此打开相应的命名空间：
@@ -71,16 +78,29 @@ open NatPlayground2 (minus)
 open Bin
 
 /-!
-### 故障排查提示（Troubleshooting）
+### 常见故障排查指引（Troubleshooting Guide）
 
-如果你在 Neovim 或 VSCode 的 Lean Infoview 中看到诸如：
-`unknown package 'SFLean4'` 或 `cannot find import 'SFLean4.LF.Basics'` 的报错，
-通常是因为尚未完成前置模块的编译，或者是语言服务器后台未同步最新的环境缓存。
-此时只需在终端执行一次：
-```bash
-lake build
-```
-并在编辑器中重启 Lean 语言服务（例如在 Neovim 中执行 `:LspRestart`），即可恢复顺畅的代码辅助与证明状态交互！
+正如 Coq 原书中对初学者可能遇到的加载路径与版本冲突所作的详尽预警，
+在 Lean 4 学习过程中，如果遇到符号找不到或加载异常，可依循如下对应策略排查：
+
+1. **未找到编译器可执行程序（Command Not Found）**：
+   - Coq 提示需确保 `coqc` 位于系统环境变量 `$PATH` 中；
+   - 在 Lean 4 中，官方推荐使用版本管理工具 **`elan`**（类似于 Rust 的 `rustup`）。执行 `elan which lean` 或 `elan which lake` 即可确认当前生效的编译器路径。
+2. **符号缺失与加载路径未对齐（Missing Identifiers / LoadPath）**：
+   - Coq 用户常借助 `Print LoadPath.` 命令检查逻辑映射是否生效；
+   - 在 Lean 4 中，如果在 Neovim 或 VS Code 中遇到 `unknown package 'SFLean4'` 或 `cannot find import 'SFLean4.LF.Basics'`，通常是因为尚未执行全局构建。只需在项目根目录运行 `lake build`，生成对应 `.olean` 缓存即可。
+3. **前置模块修改导致的跨文件假设不一致（Inconsistent Assumptions）**：
+   - 在 Coq 中，如果修改了 `Basics.v` 并重新编译，但未重新编译依赖它的 `Induction.v`，会看到报错：
+     `Compiled library Induction makes inconsistent assumptions over library Basics`
+     原书建议运行 `make clean && make` 彻底重构。
+   - 在 Lean 4 中，Lake 会依据文件内容哈希自动跟踪变化。但如果编辑器后台的 LSP 语言服务未能即时感知底层制品变更，只需在项目根目录执行：
+     ```bash
+     lake clean && lake build
+     ```
+     并在 Neovim 中运行 `:LspRestart`（或在 VS Code 中执行 `Lean 4: Restart Server`），即可彻底恢复一致性！
+4. **多版本冲突（Multiple Versions Installed）**：
+   - 原书提醒若终端的 `coqc` 与编辑器内置的 Coq 版本不一致会导致奇怪的定位错误；
+   - 在 Lean 4 中，项目根目录下的 `lean-toolchain` 文件精确锁定了项目所需的 Lean 4 版本（例如 `leanprover/lean4:v4.35.0`），`elan` 会在进入项目目录时自动无缝切换，彻底杜绝了版本分裂的隐患。
 -/
 
 
@@ -134,10 +154,22 @@ theorem add_0_l_firsttry (n : Nat) : 0 + n = n := by
 
 /-!
 既然直接化简行不通，那么利用上一章学到的 `cases` 策略对变量 $n$ 进行有限状态分类讨论，能解决问题吗？
-让我们再做一次尝试：
+在 Coq 原书中，作者首先展示了对加法右中性元进行分类讨论的尝试：
 -/
 
-/-- 对偶困境演示：利用 cases 分类讨论依然无法彻底解决无限步递归 -/
+/-- 尝试二：利用分类讨论策略 cases 考察右中性元 n + 0 = n。
+    在 Lean 4 原生环境中，因为加法对第 2 个参数递归，所以两个分支均可直接闭合；
+    而在 Coq 中，原作者在 n = S n' 分支卡在 S n' + 0 = S n' 处无法化简： -/
+theorem add_0_r_secondtry (n : Nat) : n + 0 = n := by
+  cases n with
+  | zero =>
+    -- n = 0 的情况：0 + 0 = 0，顺利通过！
+    rfl
+  | succ n' =>
+    -- n = n' + 1 的情况：(n' + 1) + 0 = n' + 1
+    rfl
+
+/-- 对偶困境演示：在 Lean 4 中，尝试使用 cases 分类讨论证明左中性元 0 + n = n -/
 theorem add_0_l_secondtry (n : Nat) : 0 + n = n := by
   cases n with
   | zero =>
@@ -146,7 +178,7 @@ theorem add_0_l_secondtry (n : Nat) : 0 + n = n := by
   | succ n' =>
     -- n = n' + 1 的情况：目标变为 0 + (n' + 1) = n' + 1
     -- 展开 Nat.add 的第二参数递归定义，左侧化简为 (0 + n') + 1 = n' + 1
-    -- 我们再次陷入了僵局：除非我们知道 0 + n' 的值，否则我们无法继续化简！
+    -- 我们陷入了与 Coq 中完全一致的僵局：除非我们预先知道 0 + n' 的值，否则无法继续化简！
     sorry
 
 /-!
@@ -191,9 +223,16 @@ theorem add_0_l (n : Nat) : 0 + n = n := by
     rw [ih]
 
 /-- 自然数加法右中性元定理：对任意自然数 n，n + 0 = n 恒成立。
-    （在 Lean 4 原生加法中，这是第二参数的基步定义，直接 rfl 判定） -/
+    （在 Lean 4 原生加法中，这是第二参数的基步定义，可直接 rfl；
+      同时亦可通过 induction 完整复刻原书证明结构） -/
 theorem add_0_r (n : Nat) : n + 0 = n := by
-  rfl
+  induction n with
+  | zero =>
+    -- 基步：0 + 0 = 0
+    rfl
+  | succ n' ih =>
+    -- 归纳步：(n' + 1) + 0 = n' + 1
+    rfl
 
 /-!
 ### 归纳策略工作流剖析
@@ -211,7 +250,7 @@ theorem add_0_r (n : Nat) : n + 0 = n := by
 注意：这里使用的是我们在上一章中手动定义的截断减法 `NatPlayground2.minus`：
 -/
 
-/-- 自然数截断自减定理：对任意自然数 n，minus n n = 0 恒成立。 -/
+/-- 自然数截断自减定理（课堂演练 / Worked in Class）：对任意自然数 n，minus n n = 0 恒成立。 -/
 theorem minus_n_n (n : Nat) : minus n n = 0 := by
   induction n with
   | zero =>
@@ -225,6 +264,7 @@ theorem minus_n_n (n : Nat) : minus n n = 0 := by
     show minus n' n' = 0
     -- 直接应用归纳假设 ih 闭合证明：
     exact ih
+
 
 /-!
 > [!TIP] 策略小技巧：量词变量的自动引入
@@ -555,9 +595,12 @@ theorem mul_comm (n m : Nat) : n * m = m * n := by
 $$n \le m \implies (p + n) \le (p + m)$$
 -/
 
+#check leb
+
 theorem plus_leb_compat_l (n m p : Nat) (h : (n <=? m) = true) :
   ((p + n) <=? (p + m)) = true := by
   sorry
+
 
 /-!
 #### ⭐️⭐️⭐️ 练习题：more_exercises (3 星，标准，选做)
@@ -704,29 +747,47 @@ theorem nat_bin_nat (n : Nat) : bin_to_nat (nat_to_bin n) = n := by
 那么反向的转换——从二进制出发，转为自然数后再转回二进制（$\text{Bin} \to \text{Nat} \to \text{Bin}$）——也是恒等的吗？
 
 答案是：**该逆向命题在一般情况下并不成立！**
+在 Coq 原书中，作者首先陈述了该猜想，并在发现其不成立后主动放弃证明（`Abort`）：
+```coq
+Theorem bin_nat_bin_fails : forall b, nat_to_bin (bin_to_nat b) = b.
+Abort.
+```
+在 Lean 4 中，我们可以直接通过构造一个具体的反例（例如带有高位前导零的 `B0 Z`），
+形式化确立该普遍命题的严格逻辑否定：
 -/
 
-/-- 逆向恒等定理的反例证明：
-    二进制数到自然数再转回二进制在包含前导零时无法还原！ -/
-theorem bin_nat_bin_fails_example : nat_to_bin (bin_to_nat (B0 Z)) ≠ B0 Z := by
+/-- 逆向恒等定理的否定（对应 Coq 中因无法成立而 Abort 的 bin_nat_bin_fails 定理）：
+    并非所有二进制数在经历转换后再转回都能取回其原始形态！ -/
+theorem bin_nat_bin_fails : ¬ (∀ b : Bin, nat_to_bin (bin_to_nat b) = b) := by
   intro h
+  have h_counter := h (B0 Z)
   -- bin_to_nat (B0 Z) 求值为 0
   -- nat_to_bin 0 求值为 Z
   -- 假设 h 意味着 Z = B0 Z，这在归纳类型的构造子互异性（NoConfusion）下是不可能的！
+  nomatch h_counter
+
+/-- 逆向恒等失败的具体数值反例 -/
+theorem bin_nat_bin_fails_example : nat_to_bin (bin_to_nat (B0 Z)) ≠ B0 Z := by
+  intro h
   nomatch h
 
 /-!
-### 为什么逆向转换会失效？
+### 为什么逆向转换会失效？（思考题）
 
-这是因为在二进制的结构化语法中，同一个数值存在**非唯一的多重表示**！
-例如：
-- `Z` 代表数值 $0$；
-- `B0 Z`（相当于最高位前导零 $00_2$）求值同样是 $0$；
-- `B0 (B0 Z)` 求值依然是 $0$！
+该定理之所以无法成立，是因为存在某些二进制数，经过转换后我们无法恢复其“最初”的形式，
+而是得到了一个“等价”的二进制数（原书在此特意未给出等价的精确定义，留给读者深思）。
 
-当我们把 `B0 Z` 传入 `bin_to_nat` 时，多余的高位前导零信息被数值求值抹去了，得到数值 $0$；
-而 `nat_to_bin 0` 永远只会生成最简明规范的代表元 `Z`，因而无法还原最初带有前导零的冗余表示！
+请在下方的注释块中，解释为什么该逆向转换定理无法成立。
+你的解释虽然不会被自动评分，但深入理解这一点对后续内容的展开至关重要。
+如果你感到困惑，不妨思考一下：如果 `double_bin` 的实现未能满足 `double_bin_zero`（例如返回了 `B0 Z`），
+但在其它方面看似正确，会带来怎样的后果？
+-/
 
+/- 请在此处写下你的思考与解释（例如关于前导零与同态代表元的讨论）：
+   [在此处输入你的解释]
+-/
+
+/-!
 为了解决这一问题，我们需要引入**规范化（Normalization）**的概念：
 在所有等价的二进制表示中，选出那个不包含任何冗余高位零的最简形式。
 随后我们即可证明：$\text{Bin} \to \text{Nat} \to \text{Bin}$ 的结果恰好等于原始二进制数的**规范化结果**！
@@ -741,7 +802,7 @@ theorem bin_nat_bin_fails_example : nat_to_bin (bin_to_nat (B0 Z)) ≠ B0 Z := b
 -/
 
 theorem double_incr (n : Nat) : double (n + 1) = (double n) + 2 := by
-  rfl
+  sorry
 
 /-!
 现在，为二进制数 `Bin` 定义对应的翻倍函数 `double_bin`：
@@ -798,6 +859,10 @@ theorem test_normalize4 : bin_to_nat (normalize (B0 (B0 (B1 Z)))) = 4 := by rfl
 /-!
 在攻克最终的主定理之前，我们需要先确立一座连接自然数翻倍与二进制翻倍的桥梁引理：
 对翻倍后的自然数转换为二进制，等于将自然数先转为二进制再应用 `double_bin`！
+
+提示：尝试对主结论展开归纳证明，观察在哪个归纳分支会卡住；
+思考是否可以抽取出一条前置引理（可能自身亦需归纳证明）来驱动主证明向前推进。
+原书中针对 `B0` 情形设计了一条结合 `double_incr_bin` 的引理，针对 `B1` 分支亦有对应对称结构。
 -/
 
 theorem nat_to_bin_double (n : Nat) :
@@ -816,6 +881,7 @@ theorem nat_to_bin_double (n : Nat) :
 theorem bin_nat_bin (b : Bin) :
   nat_to_bin (bin_to_nat b) = normalize b := by
   sorry
+
 
 
 /- ================================================================== -/
