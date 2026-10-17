@@ -10,6 +10,7 @@
 《软件基础》（*Software Foundations*, 简称 **SF**）由宾夕法尼亚大学 Benjamin C. Pierce 教授团队打造，是程序语言理论（PLT）、形式化方法与软件验证领域最广为流传的经典教材。
 
 原书基于 Coq（现 Rocq）编写，虽然逻辑严密，但在现代编辑器集成、函数式编程人体工学以及现代语言生态上稍显沧桑。**SF-lean4** 旨在：
+
 1. **紧贴最新 Lean 4 语法与哲学**：不机械地直译 Coq 策略，而是采用 Lean 4 现代的方程编译器（Equation Compiler）、模式匹配、宏、类型类及现代策略（如 `omega`, `aesop`, `cases`）。
 2. **高质量全中文教学注释**：保持文学化编程（Literate Programming）风格，在 `.lean` 源码内直接嵌入中文概念讲解、证明思路梳理与练习指引。
 3. **沉浸式 Neovim / VS Code 体验**：结合 `lean.nvim` 的实时 Infoview，让学习者像玩解谜游戏一样一步步填补 `sorry`。
@@ -37,24 +38,32 @@
 ## 🚀 快速上手
 
 ### 1. 环境准备
+
 确保本机已安装 Lean 4 版本管理器 `elan`：
+
 ```bash
 # 安装 elan
 curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh
 ```
 
 ### 2. 编译与检查
+
 在项目根目录下构建整个工程：
+
 ```bash
 lake build
 ```
+
 *(注：练习题中的 `sorry` 占位符会在编译时提示 `warning: declaration uses 'sorry'`，这是正常现象)*
 
 ### 3. 开始做题（Neovim / VS Code）
+
 使用 Neovim 打开章节文件：
+
 ```bash
 nvim SFLean4/LF/Basics.lean
 ```
+
 - 编辑器右侧会自动弹出 **Infoview** 窗口；
 - 寻找到带有 `sorry` 的练习题（如 `exercise_nandb`）；
 - 将光标停在 `sorry` 上，右侧将实时渲染待证明的目标（Goal）与已知假设（Hypotheses）；
