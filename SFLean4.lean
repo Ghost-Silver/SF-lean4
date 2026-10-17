@@ -10,3 +10,4 @@ import SFLean4.LF.IndProp
 import SFLean4.LF.Maps
 import SFLean4.LF.ProofObjects
 import SFLean4.LF.IndPrinciples
+import SFLean4.LF.Rel
