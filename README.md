@@ -36,9 +36,8 @@
   - [x] `ProofObjects.lean` (柯里-霍华德同构与证明对象) *(✅ 59/59 项声明，18/18 道习题已 100% 审计完成)*
   - [x] `IndPrinciples.lean` (归纳法则与自定义归纳模式) *(✅ 42/42 项声明，10/10 道习题已 100% 审计完成)*
   - [x] `Rel.lean` (关系性质与二元关系模型) *(✅ 34/34 项声明，12/12 道习题已 100% 审计完成)*
-  - [x] `Imp.lean` (简单命令式语言 Imp 语法、大步操作语义与形式化) *(✅ 102/102 项声明，18/18 道习题已 100% 审计完成)*
-  - [ ] `ImpParser.lean` (词法与语法分析器) *(⏳ 进行中)*
-  - [ ] `ImpCEvalFun.lean` (命令式语言求值函数)
+  - [x] `ImpParser.lean` (词法与语法分析器) *(✅ 34/34 项声明，端到端编译解析器与用例 100% 审计完成)*
+  - [ ] `ImpCEvalFun.lean` (命令式语言求值函数) *(⏳ 进行中)*
   - [ ] `Extraction.lean` (代码抽取与 AOT 编译)
   - [ ] `Auto.lean` / `AltAuto.lean` (自动化证明策略 `omega`, `aesop`, `simp` 深入)
   - [ ] `Postscript.lean` / `Bib.lean` (后记与参考文献)

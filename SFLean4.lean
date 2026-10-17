@@ -12,3 +12,4 @@ import SFLean4.LF.ProofObjects
 import SFLean4.LF.IndPrinciples
 import SFLean4.LF.Rel
 import SFLean4.LF.Imp
+import SFLean4.LF.ImpParser
