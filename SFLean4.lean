@@ -2,3 +2,4 @@
 -- Import modules here that should be built as part of the library.
 import SFLean4.LF.Basics
 import SFLean4.LF.Induction
+import SFLean4.LF.Lists
