@@ -941,3 +941,428 @@ end PlayGround
 
 theorem zero_nbeq_plus_1 (n : Nat) : (0 =? (n + 1)) = false := by
   sorry
+
+
+/- ================================================================== -/
+/-! ## 8. 进阶：记号机制与结构化递归 (More on Notation & Structural Recursion) -/
+/- ================================================================== -/
+
+/-!
+### 8.1 语法记号与优先级 (More on Notation)
+
+在之前的定义中，我们已经见识过了中缀运算符记号（如 `&&*`、`+*`、`=?` 等）。
+在形式化证明助手中，为常用函数引入符合人类数学直觉的操作符，对于代码的可读性有着决定性的影响。
+
+在原版 Coq 中，定义记号使用 `Notation`，并指定 `at level n`（优先级范围为 0 到 100）与结合性（`left associativity`）。
+而在 Lean 4 中，中缀记号体系更为规范强大，直接通过内置的宏指令声明：
+- `infixl:65 " + " => Nat.add`（左结合，优先级 65）
+- `infixr:80 " ^ " => Nat.pow`（右结合，优先级 80）
+- `prefix:90 " - " => Neg.neg`（前缀运算符）
+
+Lean 4 的优先级采用更宽广的数值区间（0 至 1024），其中乘法默认优先级高于加法。
+这使得形如 `1 + 2 * 3 * 4` 的复合表达式能够毫无歧义地被解析为 `1 + ((2 * 3) * 4)`。
+-/
+
+/-!
+### 8.2 停机检查与结构化递归 (Fixpoints and Structural Recursion)
+
+当我们编写一个递归函数时（例如之前的加法 `plus`）：
+Lean 4 为什么能允许我们写递归？
+这是因为 Lean 4 的类型论内核要求：**所有函数必须是良基且必定终止的（Well-founded and terminating）**。
+
+在 Coq 中，递归函数必须通过关键字 `Fixpoint` 声明，并且必须有某个参数在每一次递归调用中都在**严格减小（Decreasing）**——即所谓的**结构化递归（Structural Recursion）**。
+如果无法在语法层面上证明存在某个递减的归纳参数，Coq 就会直接拒绝该函数。
+
+在 Lean 4 中，我们无需区分 `def` 与 `Fixpoint`，统一使用 `def`。
+Lean 4 的方程编译器在后台拥有更加先进的自动化停机检查器（Termination Checker）：
+1. 默认情况下，Lean 4 会自动尝试寻找结构化减小（Structural Decrease）的参数；
+2. 如果函数不是朴素的结构递减（例如斐波那契数列、二分查找、或通过欧几里得算法求最大公约数），
+   Lean 4 允许我们显式提供停机依据：使用 `termination_by` 指定测度（Measure），
+   并结合 `decreasing_by` 给出该测度严格下降的数学证明。
+-/
+
+/-!
+#### ⭐️ 练习题：decreasing (2 星，可选)
+
+请思考并设计一个逻辑上对所有输入必定终止，但单纯依靠最原始的单层结构递减检查器无法一眼辨别的函数。
+在 Lean 4 中，得益于先进的推导引擎，多数形式的良基递归均可优雅支持。
+-/
+
+/- ================================================================== -/
+/-! ## 9. 基础热身练习 (Warmup Exercises) -/
+/- ================================================================== -/
+
+/-!
+在进入大规模实战案例之前，让我们先用几道精炼的习题检验并巩固我们迄今为止学到的策略：
+`intro`、`rw`、`cases` 与 `rfl`。
+-/
+
+/-!
+#### ⭐️ 练习题：identity_fn_applied_twice (1 星，标准)
+
+恒等函数应用两次：设 `f : Bool → Bool` 是一个布尔函数。
+如果已知前提 `h : ∀ (x : Bool), f x = x`（即 `f` 是恒等函数），
+请证明：对任意布尔值 `b`，都有 `f (f b) = b`。
+提示：使用两次 `rw [h]` 策略。
+-/
+
+theorem identity_fn_applied_twice (f : Bool → Bool) (h : ∀ (x : Bool), f x = x) (b : Bool) :
+    f (f b) = b := by
+  sorry
+
+/-!
+#### ⭐️ 练习题：negation_fn_applied_twice (1 星，标准)
+
+取反函数应用两次：设 `f : Bool → Bool` 是一个布尔函数。
+如果已知前提 `h : ∀ (x : Bool), f x = !x`（即 `f` 具有逻辑非的性质），
+请证明：对任意布尔值 `b`，都有 `f (f b) = b`。
+提示：先使用 `rw` 代入 `h`，然后对 `b` 进行分类讨论（`cases b`）。
+-/
+
+theorem negation_fn_applied_twice (f : Bool → Bool) (h : ∀ (x : Bool), f x = !x) (b : Bool) :
+    f (f b) = b := by
+  sorry
+
+/-!
+#### ⭐️ 练习题：andb_eq_orb (3 星，可选)
+
+请证明：对任意我们自定义的布尔值 `b` 和 `c`，
+如果 `(b &&* c) = (b ||* c)`，那么必有 `b = c`。
+提示：对 `b` 进行分类讨论；在每一个分支中化简等式两端，你会发现结论自然浮现。
+-/
+
+theorem andb_eq_orb (b c : PlayGround.bool)
+    (h : PlayGround.andb b c = PlayGround.orb b c) : b = c := by
+  sorry
+
+/- ================================================================== -/
+/-! ## 10. 形式化实战案例：课程作业迟交评分政策 (Course Late Policies, Formalized) -/
+/- ================================================================== -/
+
+/-!
+形式化验证并不仅仅局限于抽象的数学命题，
+它同样能够极其精准地形式化现实生活与软件系统中的业务规则，发现潜藏在文字描述中的漏洞与边界缺陷。
+
+假设某大学课程制定了一套基于迟交天数（Late Days）的作业扣分政策：
+如果学生迟交次数过多，期末的成绩等级将会被降级。
+在接下来的系列任务中，我们将使用迄今学到的全部语言特性对这套规则进行严格的形式化建模，
+并证明关于该评分政策的定理。
+-/
+
+namespace LateDays
+
+/-!
+### 10.1 等级与修饰符数据结构建模
+-/
+
+/-- 成绩的字母部分：A、B、C、D、F -/
+inductive Letter where
+  | A
+  | B
+  | C
+  | D
+  | F
+  deriving Repr, DecidableEq
+
+/-- 等级修饰符：加号（Plus，如 A+）、普通无修饰（Natural，如 A）、减号（Minus，如 A-） -/
+inductive Modifier where
+  | Plus
+  | Natural
+  | Minus
+  deriving Repr, DecidableEq
+
+/-- 完整的成绩等级：由一个字母和一个修饰符复合而成。
+    例如 `Grade.grade .A .Minus` 表示 A-，`Grade.grade .C .Natural` 表示 C。 -/
+inductive Grade where
+  | grade (l : Letter) (m : Modifier) : Grade
+  deriving Repr, DecidableEq
+
+/-- 用于表示三元比较结果的枚举类型：相等 (Eq)、严格小于 (Lt)、严格大于 (Gt) -/
+inductive Comparison where
+  | Eq
+  | Lt
+  | Gt
+  deriving Repr, DecidableEq
+
+open Letter Modifier Grade Comparison
+
+/-!
+### 10.2 比较运算定义
+-/
+
+/-- 比较两个字母等级的高低：A > B > C > D > F -/
+def letter_comparison (l1 l2 : Letter) : Comparison :=
+  match l1, l2 with
+  | .A, .A => .Eq
+  | .A, _  => .Gt
+  | .B, .A => .Lt
+  | .B, .B => .Eq
+  | .B, _  => .Gt
+  | .C, .A | .C, .B => .Lt
+  | .C, .C => .Eq
+  | .C, _  => .Gt
+  | .D, .A | .D, .B | .D, .C => .Lt
+  | .D, .D => .Eq
+  | .D, _  => .Gt
+  | .F, .F => .Eq
+  | .F, _  => .Lt
+
+#eval letter_comparison .B .A
+-- 输出: Comparison.Lt
+
+#eval letter_comparison .D .D
+-- 输出: Comparison.Eq
+
+#eval letter_comparison .B .F
+-- 输出: Comparison.Gt
+
+/-!
+#### ⭐️ 练习题：letter_comparison (1 星，标准)
+
+健全性自检：证明任何字母等级与自身比较必然为 `.Eq`。
+-/
+
+theorem letter_comparison_Eq (l : Letter) : letter_comparison l l = .Eq := by
+  sorry
+
+/-- 比较两个修饰符的高低：Plus > Natural > Minus -/
+def modifier_comparison (m1 m2 : Modifier) : Comparison :=
+  match m1, m2 with
+  | .Plus, .Plus => .Eq
+  | .Plus, _     => .Gt
+  | .Natural, .Plus => .Lt
+  | .Natural, .Natural => .Eq
+  | .Natural, _  => .Gt
+  | .Minus, .Plus | .Minus, .Natural => .Lt
+  | .Minus, .Minus => .Eq
+
+/-!
+#### ⭐️ 练习题：grade_comparison (2 星，标准)
+
+请补全两个完整成绩之间的比较运算（字典序比较）：
+首先比较字母等级；如果字母相同，再进一步比较修饰符。
+-/
+
+def grade_comparison (g1 g2 : Grade) : Comparison :=
+  match g1, g2 with
+  | .grade l1 m1, .grade l2 m2 =>
+    match letter_comparison l1 l2 with
+    | .Eq => modifier_comparison m1 m2
+    | .Gt => .Gt
+    | .Lt => .Lt
+
+-- 单元测试断言
+example : grade_comparison (.grade .A .Minus) (.grade .B .Plus) = .Gt := by rfl
+example : grade_comparison (.grade .A .Minus) (.grade .A .Plus) = .Lt := by rfl
+example : grade_comparison (.grade .F .Plus) (.grade .F .Plus) = .Eq := by rfl
+example : grade_comparison (.grade .B .Minus) (.grade .C .Plus) = .Gt := by rfl
+
+/-!
+### 10.3 降级逻辑与边界反例分析
+-/
+
+/-- 将字母等级降低一档（A 降为 B，B 降为 C 等；F 已经是最低，保持为 F） -/
+def lower_letter (l : Letter) : Letter :=
+  match l with
+  | .A => .B
+  | .B => .C
+  | .C => .D
+  | .D => .F
+  | .F => .F
+
+/-- 边界事实：F 无法再降低，降低 F 仍得到 F -/
+theorem lower_letter_F_is_F : lower_letter .F = .F := by
+  rfl
+
+/-!
+#### ⭐️ 练习题：lower_letter_lowers (2 星，标准)
+
+我们直觉上会认为“降低一个字母等级后必然比原来低”，即：
+`∀ l, letter_comparison (lower_letter l) l = .Lt`。
+但在形式化世界中，这个命题是不成立的——反例恰恰是 `l = .F`！
+只要我们加上前置条件排除 `F`（即 `h : letter_comparison .F l = .Lt`），该命题即可顺利成立。
+请完成证明：
+-/
+
+theorem lower_letter_lowers (l : Letter) (h : letter_comparison .F l = .Lt) :
+    letter_comparison (lower_letter l) l = .Lt := by
+  sorry
+
+/-!
+#### ⭐️ 练习题：lower_grade (2 星，标准)
+
+请实现完整成绩降低一档的函数：
+- A+ 降为 A；A 降为 A-；A- 降为 B+；
+- 最低成绩为 F-，降低 F- 依然为 F-。
+-/
+
+def lower_grade (g : Grade) : Grade :=
+  match g with
+  | .grade l m =>
+    match m with
+    | .Plus    => .grade l .Natural
+    | .Natural => .grade l .Minus
+    | .Minus   =>
+      match l with
+      | .F => .grade .F .Minus
+      | _  => .grade (lower_letter l) .Plus
+
+-- 单元测试示例
+example : lower_grade (.grade .A .Plus) = .grade .A .Natural := by rfl
+example : lower_grade (.grade .A .Natural) = .grade .A .Minus := by rfl
+example : lower_grade (.grade .A .Minus) = .grade .B .Plus := by rfl
+example : lower_grade (.grade .B .Plus) = .grade .B .Natural := by rfl
+example : lower_grade (.grade .F .Natural) = .grade .F .Minus := by rfl
+example : lower_grade (lower_grade (.grade .B .Minus)) = .grade .C .Natural := by rfl
+example : lower_grade (lower_grade (lower_grade (.grade .B .Minus))) = .grade .C .Minus := by rfl
+
+theorem lower_grade_F_Minus : lower_grade (.grade .F .Minus) = .grade .F .Minus := by
+  rfl
+
+/-!
+#### ⭐️ 练习题：lower_grade_lowers (3 星，标准)
+
+证明：只要成绩初始高于 F-，执行 `lower_grade` 后成绩必然严格变低。
+提示：对 `g` 和 `m` 分别进行 `cases` 展开，并结合之前证明过的引理 `letter_comparison_Eq`。
+-/
+
+theorem lower_grade_lowers (g : Grade)
+    (h : grade_comparison (.grade .F .Minus) g = .Lt) :
+    grade_comparison (lower_grade g) g = .Lt := by
+  sorry
+
+/-!
+### 10.4 迟交政策形式化与性质证明
+
+具体的迟交惩罚规则如下：
+- 迟交 0 到 8 天：无惩罚；
+- 迟交 9 到 16 天：降低 1 档（如 A+ => A, A- => B+）；
+- 迟交 17 到 20 天：降低 2 档；
+- 迟交 21 天及以上：降低 3 档（整整一个字母级别）。
+-/
+
+def apply_late_policy (late_days : Nat) (g : Grade) : Grade :=
+  if (late_days <? 9) then g
+  else if (late_days <? 17) then lower_grade g
+  else if (late_days <? 21) then lower_grade (lower_grade g)
+  else lower_grade (lower_grade (lower_grade g))
+
+theorem apply_late_policy_unfold (late_days : Nat) (g : Grade) :
+    apply_late_policy late_days g =
+      (if (late_days <? 9) then g
+      else if (late_days <? 17) then lower_grade g
+      else if (late_days <? 21) then lower_grade (lower_grade g)
+      else lower_grade (lower_grade (lower_grade g))) := by
+  rfl
+
+/-!
+#### ⭐️ 练习题：no_penalty_for_mostly_on_time (2 星，标准)
+
+证明：如果迟交天数不超过 8 天（即 `late_days <? 9 = true`），学生的成绩不受任何影响。
+-/
+
+theorem no_penalty_for_mostly_on_time (late_days : Nat) (g : Grade)
+    (h : (late_days <? 9) = true) :
+    apply_late_policy late_days g = g := by
+  sorry
+
+/-!
+#### ⭐️ 练习题：grade_lowered_once (2 星，标准)
+
+证明：如果迟交天数在 9 到 16 天之间，成绩恰好被扣降一档。
+-/
+
+theorem grade_lowered_once (late_days : Nat) (g : Grade)
+    (h1 : (late_days <? 9) = false)
+    (h2 : (late_days <? 17) = true) :
+    apply_late_policy late_days g = lower_grade g := by
+  sorry
+
+end LateDays
+
+/- ================================================================== -/
+/-! ## 11. 形式化挑战：二进制计数系统 (Binary Numerals) -/
+/- ================================================================== -/
+
+/-!
+#### ⭐️ 练习题：binary (3 星，标准)
+
+此前我们定义的皮亚诺自然数是一进制（Unary）的：数值 $n$ 由 $n$ 个嵌套的 `S` 构造子构成。
+这种表示法在理论证明上极简优美，但在空间与时间复杂度上效率较低。
+
+我们可以通过定义一个归纳数据类型 `Bin` 将自然数推广为更加高效的**二进制（Binary）计数体系**：
+- `Z` 代表零；
+- `B0 n` 代表将二进制数 `n` 左移一位并补零，对应数学数值 $2 \times n$；
+- `B1 n` 代表将二进制数 `n` 左移一位并补一，对应数学数值 $2 \times n + 1$。
+
+在这个表示中，**低位（低有效位 Least Significant Bit）在左，高位在右**。
+例如：
+- 十进制 `0` 对应 `Z`
+- 十进制 `1` 对应 `B1 Z`
+- 十进制 `2` 对应 `B0 (B1 Z)`
+- 十进制 `3` 对应 `B1 (B1 Z)`
+- 十进制 `4` 对应 `B0 (B0 (B1 Z))`
+
+请补全下列二进制“加一运算” `incr` 与“二进制转十进制” `bin_to_nat` 的函数定义，
+并确保随后的单元测试全部顺利得证：
+-/
+
+inductive Bin where
+  | Z
+  | B0 (n : Bin)
+  | B1 (n : Bin)
+  deriving Repr, DecidableEq
+
+open Bin
+
+/-- 二进制自增函数（加一运算） -/
+def incr (m : Bin) : Bin :=
+  match m with
+  | Z    => B1 Z
+  | B0 n => B1 n
+  | B1 n => B0 (incr n)
+
+/-- 将二进制数转换为十进制原生自然数 -/
+def bin_to_nat (m : Bin) : Nat :=
+  match m with
+  | Z    => 0
+  | B0 n => (bin_to_nat n) + (bin_to_nat n)
+  | B1 n => (bin_to_nat n + 1) + (bin_to_nat n)
+
+-- 单元测试套件：自增运算验证
+example : incr (B1 Z) = B0 (B1 Z) := by rfl
+example : incr (B0 (B1 Z)) = B1 (B1 Z) := by rfl
+example : incr (B1 (B1 Z)) = B0 (B0 (B1 Z)) := by rfl
+
+-- 单元测试套件：数制转换验证
+example : bin_to_nat (B0 (B1 Z)) = 2 := by rfl
+example : bin_to_nat (incr (B1 Z)) = 1 + bin_to_nat (B1 Z) := by rfl
+example : bin_to_nat (incr (incr (B1 Z))) = 2 + bin_to_nat (B1 Z) := by rfl
+
+/- ================================================================== -/
+/-! ## 12. 章节总结与测试指引 (Testing Your Solutions) -/
+/- ================================================================== -/
+
+/-!
+至此，我们已经完整走完了《软件基础》第一章《基础》（Basics）的全部理论与实践内容！
+
+### 核心收获总结：
+1. **函数式编程基石**：
+   - 掌握了在 Lean 4 中通过归纳数据类型（`inductive`）从零构造枚举、布尔、元组与皮亚诺自然数；
+   - 掌握了通过模式匹配（`match`）与结构化递归编写纯函数。
+2. **基础证明策略工具箱**：
+   - `rfl`：利用计算化简与定义等价性判定显然等式；
+   - `intro`：将全称量词变量与命题假设引入局部上下文；
+   - `rw`：利用已知等式假设或全局定理进行双向重写与子项代换；
+   - `cases`：对有限状态与代数数据结构进行完备的分类讨论；
+   - 方程编译器（Equation Compiler）：在 Lean 4 中直接用模式匹配写定理证明。
+
+### 自动化构建与检验：
+在终端执行：
+```bash
+lake build
+```
+若屏幕显示 `Build completed successfully`，且所有预留的习题均正常提示 `declaration uses 'sorry'`，
+即代表你已经拥有了一份完全准备就绪的形式化作业！
+现在，在 Neovim 中逐一寻找 `sorry`，踏上你的定理证明解谜之旅吧！
+-/

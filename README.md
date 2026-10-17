@@ -21,7 +21,7 @@
 ## 📚 卷次规划
 
 - [ ] **第一卷：逻辑基础 (Volume 1: Logical Foundations - LF)**
-  - [x] `Basics.lean` (基础篇：函数式编程与基础策略) *(持续扩充中)*
+  - [x] `Basics.lean` (基础篇：函数式编程与基础策略) *(✅ 第一章全书已完整汉化重制)*
   - [ ] `Induction.lean` (归纳证明)
   - [ ] `Lists.lean` (结构化数据)
   - [ ] `Poly.lean` (多态与高阶函数)
