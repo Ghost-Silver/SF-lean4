@@ -22,7 +22,7 @@
 
 - [ ] **第一卷：逻辑基础 (Volume 1: Logical Foundations - LF)**
   - [x] `Basics.lean` (基础篇：函数式编程与基础策略) *(✅ 第一章全书已完整汉化重制)*
-  - [ ] `Induction.lean` (归纳证明)
+  - [x] `Induction.lean` (归纳证明篇：数学归纳法、局部引理与数制规范化) *(✅ 第二章全书已完整汉化重制)*
   - [ ] `Lists.lean` (结构化数据)
   - [ ] `Poly.lean` (多态与高阶函数)
   - [ ] `Tactics.lean` (进阶证明策略)
