@@ -4,3 +4,4 @@ import SFLean4.LF.Basics
 import SFLean4.LF.Induction
 import SFLean4.LF.Lists
 import SFLean4.LF.Poly
+import SFLean4.LF.Tactics
