@@ -40,8 +40,8 @@
   - [x] `ImpParser.lean` (词法与语法分析器) *(✅ 34/34 项声明，端到端编译解析器与用例 100% 审计完成)*
   - [x] `ImpCEvalFun.lean` (命令式语言求值函数：步数索引与大步语义等价性) *(✅ 20/20 项声明，4/4 道习题已 100% 审计完成)*
   - [x] `Extraction.lean` (代码抽取与 AOT 编译：Coq 抽取 vs. Lean 4 原生编译与驱动测试) *(✅ 端到端可执行解释器驱动 100% 审计完成)*
-  - [ ] `Auto.lean` / `AltAuto.lean` (自动化证明策略 `omega`, `aesop`, `simp` 深入) *(⏳ 进行中)*
-  - [ ] `Postscript.lean` / `Bib.lean` (后记与参考文献)
+  - [x] `Auto.lean` (自动化证明策略深入：`solve_by_elim`, `omega`, 延迟元变量与 `Repeat` 语言演进扩展) *(✅ 23/23 项声明与定理 100% 审计完成)*
+  - [ ] `Postscript.lean` / `Bib.lean` (后记与参考文献) *(⏳ 进行中)*
 
 ### 第二卷：程序语言基础 (Volume 2: Programming Language Foundations - PLF) *(规划中)*
 ### 第三卷：函数式算法验证 (Volume 3: Verified Functional Algorithms - VFA) *(规划中)*

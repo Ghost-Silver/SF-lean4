@@ -15,3 +15,4 @@ import SFLean4.LF.Imp
 import SFLean4.LF.ImpParser
 import SFLean4.LF.ImpCEvalFun
 import SFLean4.LF.Extraction
+import SFLean4.LF.Auto
