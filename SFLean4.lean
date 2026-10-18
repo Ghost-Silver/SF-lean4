@@ -54,3 +54,4 @@ import SFLean4.VFA.Extract
 import SFLean4.VFA.Redblack
 import SFLean4.VFA.Trie
 import SFLean4.VFA.Priqueue
+import SFLean4.VFA.Binom
