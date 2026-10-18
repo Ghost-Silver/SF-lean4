@@ -45,7 +45,30 @@
   - [x] `Postscript.lean` (后记：全卷总结、核心概念纵览与进阶指引) *(✅ 100% 审计完成)*
   - [x] `Bib.lean` (参考文献：经典文献与文献数据库) *(✅ 100% 审计完成)*
 
-### 第二卷：程序语言基础 (Volume 2: Programming Language Foundations - PLF) *(规划中)*
+### 第二卷：程序语言基础 (Volume 2: Programming Language Foundations - PLF)
+
+- [x] `Preface.lean` (前言：课程指引与 PLF 路线图) *(✅ 100% 审计完成)*
+- [x] `Maps.lean` (映射库桥接) *(✅ 100% 审计完成)*
+- [x] `Imp.lean` (Imp 命令式语言桥接) *(✅ 100% 审计完成)*
+- [x] `Equiv.lean` (程序等价性：行为等价、同余性、常量折叠优化、代换反例与非确定性 Imp) *(✅ 107/107 项声明，27/27 道习题已 100% 审计完成)*
+- [ ] `Hoare.lean` (霍尔逻辑第一部分：霍尔三元组、前条件后条件与命令推理法则)
+- [ ] `Hoare2.lean` (霍尔逻辑第二部分：装潢程序、不变式生成与形式化验证实战)
+- [ ] `HoareAsLogic.lean` (作为形式逻辑的霍尔逻辑：公理系统与完备性定理)
+- [ ] `Smallstep.lean` (小步操作语义：上下文归约、确定性与大步小步等价性)
+- [ ] `Types.lean` (类型系统入门：非类型化算术与布尔、简单类型、进度与保型定理)
+- [ ] `Stlc.lean` (简单类型 Lambda 演算：语法、操作语义与替代定理)
+- [ ] `StlcProp.lean` (STLC 性质验证：进益引理、上下文同构与规范形式)
+- [ ] `MoreStlc.lean` (STLC 拓展：积类型、和类型、定点组合子与递归)
+- [ ] `Sub.lean` (子类型化：前序关系、包容法则与记录子类型)
+- [ ] `Typechecking.lean` (类型检查器实现：可判定类型重构与推断算法)
+- [ ] `Records.lean` (记录类型系统：字段访问与标签映射)
+- [ ] `References.lean` (可变引用与内存状态：别名、循环数据与安全引用语义)
+- [ ] `RecordSub.lean` (带子类型的记录系统)
+- [ ] `Norm.lean` (STLC 强规范化：可归约性候选与 Tait 证明)
+- [ ] `PE.lean` (偏评估与在线特化)
+- [ ] `Postscript.lean` (卷二后记)
+- [ ] `Bib.lean` (全卷参考文献)
+
 ### 第三卷：函数式算法验证 (Volume 3: Verified Functional Algorithms - VFA) *(规划中)*
 
 ---
