@@ -29,3 +29,4 @@ import SFLean4.PLF.HoareAsLogic
 import SFLean4.PLF.Smallstep
 import SFLean4.PLF.Types
 import SFLean4.PLF.Stlc
+import SFLean4.PLF.StlcProp
