@@ -55,3 +55,4 @@ import SFLean4.VFA.Redblack
 import SFLean4.VFA.Trie
 import SFLean4.VFA.Priqueue
 import SFLean4.VFA.Binom
+import SFLean4.VFA.Decide
