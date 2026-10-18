@@ -23,3 +23,4 @@ import SFLean4.PLF.Preface
 import SFLean4.PLF.Maps
 import SFLean4.PLF.Imp
 import SFLean4.PLF.Equiv
+import SFLean4.PLF.Hoare
