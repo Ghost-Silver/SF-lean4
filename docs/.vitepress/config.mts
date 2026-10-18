@@ -55,6 +55,7 @@ export default defineConfig({
       { text: '卷一：逻辑基础 (LF)', link: '/LF/Basics' },
       { text: '卷二：语言基础 (PLF)', link: '/PLF/Preface' },
       { text: '卷三：算法验证 (VFA)', link: '/VFA/Preface' },
+      { text: '手记与博客', link: '/blog/' },
       { 
         text: '资源与链接',
         items: [
@@ -144,6 +145,15 @@ export default defineConfig({
             { text: 'Binom · 二项堆：可合并队列与进位链', link: '/VFA/Binom' },
             { text: 'Decide · 判定过程：反射与构造性析取', link: '/VFA/Decide' },
             { text: 'Color · 图着色与编译器寄存器分配', link: '/VFA/Color' },
+          ]
+        }
+      ],
+      '/blog/': [
+        {
+          text: '📝 手记与博客',
+          items: [
+            { text: '博客专栏总览', link: '/blog/' },
+            { text: '重塑经典：用现代 Lean 4 重构《软件基础》', link: '/blog/rebuilding-software-foundations-in-lean4' }
           ]
         }
       ]
