@@ -40,3 +40,16 @@ import SFLean4.PLF.Norm
 import SFLean4.PLF.PE
 import SFLean4.PLF.Postscript
 import SFLean4.PLF.Bib
+import SFLean4.VFA.Preface
+import SFLean4.VFA.Perm
+import SFLean4.VFA.Sort
+import SFLean4.VFA.Multiset
+import SFLean4.VFA.BagPerm
+import SFLean4.VFA.Selection
+import SFLean4.VFA.Merge
+import SFLean4.VFA.Maps
+import SFLean4.VFA.SearchTree
+import SFLean4.VFA.ADT
+import SFLean4.VFA.Extract
+import SFLean4.VFA.Redblack
+import SFLean4.VFA.Trie
