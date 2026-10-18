@@ -1,7 +1,12 @@
 # SF-lean4: 《软件基础》Lean 4 中文社区重制版
 
+[![Lean Action CI](https://github.com/Ghost-Silver/SF-lean4/actions/workflows/lean_action_ci.yml/badge.svg)](https://github.com/Ghost-Silver/SF-lean4/actions)
+[![Deploy Documentation](https://github.com/Ghost-Silver/SF-lean4/actions/workflows/deploy-docs.yml/badge.svg)](https://ghost-silver.github.io/SF-lean4/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 > **Software Foundations in Modern Lean 4 (Chinese Edition)**  
-> 致力于用现代 Lean 4 重塑经典形式化验证教材《软件基础》（Software Foundations），提供地道、惯用（Idiomatic）的形式化代码实现与通俗详尽的中文解析。
+> 致力于用现代 Lean 4 重塑经典形式化验证教材《软件基础》（Software Foundations），提供地道、惯用（Idiomatic）的形式化代码实现与通俗详尽的中文解析。  
+> 📖 **在线文档网站**：[https://ghost-silver.github.io/SF-lean4/](https://ghost-silver.github.io/SF-lean4/)
 
 ---
 
@@ -15,7 +20,7 @@
 2. **高质量全中文教学注释**：保持文学化编程（Literate Programming）风格，在 `.lean` 源码内直接嵌入中文概念讲解、证明思路梳理与练习指引。
 3. **100% 忠实还原与严格审计**：每一章均对照英文原版进行逐字逐句严谨审计，确保定义、定理、引理与练习题**无删减、无遗漏**，习题名称与星级完全契合原版自动化评分标准。
 4. **沉浸式 Neovim / VS Code 体验**：结合 `lean.nvim` 的实时 Infoview，让学习者像玩解谜游戏一样一步步填补 `sorry`。
-5. **配套在线文档（规划中）**：后续将通过 `mdbook` / `Verso` 一键生成与原书类似的交互式中文 HTML 网页教程。
+5. **配套交互式在线文档**：全卷 57 章已由 VitePress + MathJax 驱动上线，提供毫秒级全文即时检索、自适应深色模式与习题星级导航：👉 **[点击直达在线文档](https://ghost-silver.github.io/SF-lean4/)**。
 
 ---
 

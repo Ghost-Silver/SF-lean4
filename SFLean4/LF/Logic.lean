@@ -259,10 +259,10 @@ theorem or_commut (P Q : Prop) : P ∨ Q → Q ∨ P := by
 /-!
 ### 2.3 伪命题与否定 (Falsehood and Negation - `¬` / `False`)
 
-在直觉主义与构造性逻辑中，逻辑否定 $
-eg P$（非 $P$）被**定义**为：
+在直觉主义与构造性逻辑中，逻辑否定 $\neg P$（非 $P$）被**定义**为：
 $$
-eg P 	riangleq P 	o 	ext{False}$$
+\neg P \triangleq P \to \text{False}
+$$
 其中 `False` 是 Lean 4 / Coq 标准库中没有任何构造子的空归纳类型（Uninhabited Type）。
 这意味着：断言“$P$ 不成立”，实质上就是声称“如果假定 $P$ 成立，就能构造出荒谬的矛盾（`False`）”。
 -/
@@ -320,16 +320,10 @@ theorem double_neg (P : Prop) : P → ¬¬P := by
 请给出定理 `double_neg`（即对于任意命题 `P`，`P → ¬¬P`）的非形式化数学证明。
 
 **证明草稿（中文非形式化证明）**：
-假设命题 $P$ 成立。我们要证明 $
-eg
-eg P$，根据否定的定义，这等价于证明 $(
-eg P) 	o 	ext{False}$。
-因此，我们进一步假设 $
-eg P$ 成立，即假设 $P 	o 	ext{False}$。
-将此蕴含假设应用于最开始的已知事实 $P$，即可得出矛盾 $	ext{False}$。
-根据否定引入规则，由此证明了 $
-eg
-eg P$。
+假设命题 $P$ 成立。我们要证明 $\neg \neg P$，根据否定的定义，这等价于证明 $(\neg P) \to \text{False}$。
+因此，我们进一步假设 $\neg P$ 成立，即假设 $P \to \text{False}$。
+将此蕴含假设应用于最开始的已知事实 $P$，即可得出矛盾 $\text{False}$。
+根据否定引入规则，由此证明了 $\neg \neg P$。
 证毕。
 -/
 
@@ -357,16 +351,10 @@ theorem not_both_true_and_false (P : Prop) : ¬(P ∧ ¬P) := by
 请用自然语言给出命题 `∀ P : Prop, ¬(P ∧ ¬P)`（无矛盾律）的非形式化证明。
 
 **证明草稿（中文非形式化证明）**：
-任取命题 $P$。我们要证明 $
-eg(P \wedge 
-eg P)$，根据否定的定义即证明 $(P \wedge 
-eg P) 	o 	ext{False}$。
-假设合取式 $P \wedge 
-eg P$ 成立。
-由合取消去律，我们同时拥有前提 $P$ 以及前提 $
-eg P$（即 $P 	o 	ext{False}$）。
-将假设 $
-eg P$ 应用于假设 $P$，直接得出矛盾 $	ext{False}$。
+任取命题 $P$。我们要证明 $\neg (P \wedge \neg P)$，根据否定的定义即证明 $(P \wedge \neg P) \to \text{False}$。
+假设合取式 $P \wedge \neg P$ 成立。
+由合取消去律，我们同时拥有前提 $P$ 以及前提 $\neg P$（即 $P \to \text{False}$）。
+将假设 $\neg P$ 应用于假设 $P$，直接得出矛盾 $\text{False}$。
 因此原命题成立。
 证毕。
 -/
@@ -929,7 +917,7 @@ theorem forallb_true_iff (X : Type) (test : X → Bool) (l : list X) :
 ### 6.1 函数外延性 (Functional Extensionality)
 
 在普通数学中，如果两个函数在每一个输入上都产生相同的输出，则这两个函数就是相等的：
-$$(orall x, f\ x = g\ x) \implies f = g$$
+$$(\forall x, f\ x = g\ x) \implies f = g$$
 这被称为**函数外延性原理 (Functional Extensionality)**。
 
 在某些极简单的情况下，若两个函数能直接化简为相同表达式，则无需公理即可通过 `rfl` 证明相等：
@@ -985,8 +973,9 @@ theorem tr_rev_correct (X : Type) :
 ### 6.2 经典逻辑 vs. 构造性逻辑 (Classical vs. Constructive Logic)
 
 在经典数学（如 ZFC 集合论）中，任何命题要么为真，要么为假，这被称为**排中律 (Law of the Excluded Middle)**：
-$$orall P : 	ext{Prop},\ P \lor 
-eg P$$
+$$
+\forall P : \text{Prop},\ P \lor \neg P
+$$
 
 然而，在构造性逻辑（Constructive Logic）中，排中律并非逻辑公理！
 因为在构造性哲学中，一个存在量词证明 $\exists x, P\ x$ 必须实质性给出一个具体的构造算法与见证者；

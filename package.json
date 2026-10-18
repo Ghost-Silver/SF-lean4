@@ -1,0 +1,28 @@
+{
+  "name": "sf-lean4",
+  "version": "1.0.0",
+  "description": "> **Software Foundations in Modern Lean 4 (Chinese Edition)**   > 致力于用现代 Lean 4 重塑经典形式化验证教材《软件基础》（Software Foundations），提供地道、惯用（Idiomatic）的形式化代码实现与通俗详尽的中文解析。",
+  "main": "index.js",
+  "scripts": {
+    "docs:generate": "python3 scripts/build_docs.py",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "python3 scripts/build_docs.py && vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ghost-Silver/SF-lean4.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Ghost-Silver/SF-lean4/issues"
+  },
+  "homepage": "https://github.com/Ghost-Silver/SF-lean4#readme",
+  "devDependencies": {
+    "markdown-it-mathjax3": "^4.3.2",
+    "vitepress": "^1.6.4"
+  }
+}
