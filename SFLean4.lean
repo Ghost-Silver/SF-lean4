@@ -37,3 +37,6 @@ import SFLean4.PLF.Records
 import SFLean4.PLF.References
 import SFLean4.PLF.RecordSub
 import SFLean4.PLF.Norm
+import SFLean4.PLF.PE
+import SFLean4.PLF.Postscript
+import SFLean4.PLF.Bib
