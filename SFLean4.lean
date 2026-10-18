@@ -31,3 +31,4 @@ import SFLean4.PLF.Types
 import SFLean4.PLF.Stlc
 import SFLean4.PLF.StlcProp
 import SFLean4.PLF.MoreStlc
+import SFLean4.PLF.Sub
