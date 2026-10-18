@@ -56,3 +56,4 @@ import SFLean4.VFA.Trie
 import SFLean4.VFA.Priqueue
 import SFLean4.VFA.Binom
 import SFLean4.VFA.Decide
+import SFLean4.VFA.Color
