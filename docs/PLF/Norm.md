@@ -35,15 +35,11 @@ def manual_grade_for_norm_fail : Option (Nat × String) := none
 
 ```lean
 def manual_grade_for_norm : Option (Nat × String) := none
-
-/- ################################################################# -/
 ```
 
 ## 1. 语言定义 (Language)
 
 ```lean
-/- ################################################################# -/
-
 /-- 带有布尔值与对偶积类型的简单类型 -/
 inductive ty : Type where
   | Ty_Bool : ty
@@ -266,15 +262,11 @@ theorem typable_empty__closed (t : tm) (T : ty) :
 theorem step_deterministic :
     PLF.Smallstep.deterministic step := by
   sorry
-
-/- ################################################################# -/
 ```
 
 ## 2. 规范化与 Tait 逻辑关系 (Normalization and Tait's Method)
 
 ```lean
-/- ################################################################# -/
-
 /-- 停机断言：项能够在多步归约后抵达某个良构的值 -/
 def halts (t : tm) : Prop :=
   ∃ t', multistep t t' ∧ value t'
@@ -333,15 +325,11 @@ theorem step_preserves_R' (T : ty) (t t' : tm) :
 theorem multistep_preserves_R' (T : ty) (t t' : tm) :
     has_type empty t T → multistep t t' → R T t' → R T t := by
   sorry
-
-/- ################################################################# -/
 ```
 
 ## 3. 多重代换与代换环境 (Multisubstitutions)
 
 ```lean
-/- ################################################################# -/
-
 abbrev env : Type := List (String × tm)
 
 /-- 多重代换：从右至左依次执行环境列表中的变量代换 -/
@@ -471,15 +459,11 @@ theorem msubst_R (c : tass) (e : env) (t : tm) (T : ty) :
     instantiation c e →
     R T (msubst e t) := by
   sorry
-
-/- ################################################################# -/
 ```
 
 ## 4. 强规范化定理 (The Normalization Theorem)
 
 ```lean
-/- ################################################################# -/
-
 /--
 强规范化定理 (Normalization Theorem)：
 每一个在空上下文中良类型的项必然在有限步内停机（归约到某个值）。

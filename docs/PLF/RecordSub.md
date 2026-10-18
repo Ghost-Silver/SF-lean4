@@ -23,15 +23,11 @@ namespace PLF.RecordSub
 
 ```lean
 namespace RecordSub
-
-/- ################################################################# -/
 ```
 
 ## 1. 核心定义 (Core Definitions)
 
 ```lean
-/- ################################################################# -/
-
 /--
 结合记录与子类型顶层类型的类型集合：
 - `Ty_Top`: 最大顶层类型 Top
@@ -159,15 +155,11 @@ inductive step : tm → tm → Prop where
       value v1 →
       step tr2 tr2' →
       step (tm_rcons i v1 tr2) (tm_rcons i v1 tr2')
-
-/- ################################################################# -/
 ```
 
 ## 2. 记录子类型关系 (Subtyping)
 
 ```lean
-/- ################################################################# -/
-
 /--
 记录子类型归纳关系 `subtype S T`：
 - 自反性与传递性
@@ -206,15 +198,11 @@ inductive subtype : ty → ty → Prop where
       i1 ≠ i2 →
       subtype (Ty_RCons i1 T1 (Ty_RCons i2 T2 Tr3))
               (Ty_RCons i2 T2 (Ty_RCons i1 T1 Tr3))
-
-/- ################################################################# -/
 ```
 
 ## 3. 子类型化示例 (Examples)
 
 ```lean
-/- ################################################################# -/
-
 namespace Examples
 
 def x : String := "x"
@@ -269,15 +257,11 @@ theorem subtyping_example_4 :
   sorry
 
 end Examples
-
-/- ################################################################# -/
 ```
 
 ## 4. 子类型性质 (Properties of Subtyping)
 
 ```lean
-/- ################################################################# -/
-
 theorem subtype__wf (S T : ty) :
     subtype S T →
     well_formed_ty T ∧ well_formed_ty S := by
@@ -309,15 +293,11 @@ theorem sub_inversion_arrow (U V1 V2 : ty) :
     subtype U (Ty_Arrow V1 V2) →
     ∃ U1 U2, U = Ty_Arrow U1 U2 ∧ subtype V1 U1 ∧ subtype U2 V2 := by
   sorry
-
-/- ################################################################# -/
 ```
 
 ## 5. 定型系统与包容规则 (Typing)
 
 ```lean
-/- ################################################################# -/
-
 def context := partial_map ty
 
 /--
@@ -353,15 +333,11 @@ inductive has_type : context → tm → ty → Prop where
       record_ty Tr →
       record_tm tr →
       has_type Gamma (tm_rcons i t tr) (Ty_RCons i T Tr)
-
-/- ################################################################# -/
 ```
 
 ## 6. 定型示例 (Typing Examples)
 
 ```lean
-/- ################################################################# -/
-
 namespace Examples2
 
 open Examples
@@ -399,15 +375,11 @@ theorem typing_example_2 :
   sorry
 
 end Examples2
-
-/- ################################################################# -/
 ```
 
 ## 7. 定型性质验证 (Properties of Typing)
 
 ```lean
-/- ################################################################# -/
-
 theorem has_type__wf (Gamma : context) (t : tm) (T : ty) :
     has_type Gamma t T → well_formed_ty T := by
   sorry

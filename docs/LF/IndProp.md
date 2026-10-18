@@ -64,15 +64,9 @@ abbrev O := 0
 
 /-- 自然数前驱函数别名，对齐原版 Coq 的 `pred` -/
 abbrev pred := Nat.pred
-
-/- ================================================================== -/
 ```
 
 ## 1. 归纳定义的命题 (Inductively Defined Propositions)
-
-```lean
-/- ================================================================== -/
-```
 
 ### 1.1 柯拉茨猜想 (The Collatz Conjecture)
 
@@ -307,15 +301,9 @@ theorem Perm3_ex1 : Perm3 [1; 2; 3] [2; 3; 1] := by
 /-- 置换关系的自反性 -/
 theorem Perm3_refl (X : Type) (a b c : X) : Perm3 [a; b; c] [a; b; c] := by
   sorry
-
-/- ================================================================== -/
 ```
 
 ## 2. 在证明中使用证据 (Using Evidence in Proofs)
-
-```lean
-/- ================================================================== -/
-```
 
 ### 2.1 解构与反演证据 (Destructing and Inverting Evidence)
 
@@ -501,15 +489,11 @@ theorem Perm3_NotIn (X : Type) (x : X) (l1 l2 : list X) (h : Perm3 l1 l2) (hnin 
 /-- 长度不一致的列表绝非置换 -/
 theorem Perm3_example2 : ¬Perm3 [1; 2; 3] [1; 2] := by
   sorry
-
-/- ================================================================== -/
 ```
 
 ## 3. 归纳关系的综合练习 (Exercising with Inductive Relations)
 
 ```lean
-/- ================================================================== -/
-
 namespace Playground
 
 /-- 标准小于等于关系的归纳定义 -/
@@ -665,15 +649,9 @@ theorem subseq_trans (l1 l2 l3 : list Nat) (h1 : subseq l1 l2) (h2 : subseq l2 l
 - R 1 [1; 2; 1; 0] 可证；
 - R 6 [3; 2; 1; 0] 不可证。
 
-```lean
-/- ================================================================== -/
-```
-
 ## 4. 案例研究：正则表达式 (Case Study: Regular Expressions)
 
 ```lean
-/- ================================================================== -/
-
 /-- 多态正则表达式数据结构 -/
 inductive reg_exp (T : Type) : Type where
   | EmptySet : reg_exp T
@@ -871,15 +849,11 @@ theorem pumping {T : Type} (re : reg_exp T) (s : list T)
       Playground.le (length s1 + length s2) (pumping_constant re) ∧
       ∀ m : Nat, s1 ++ napp m s2 ++ s3 =~ re := by
   sorry
-
-/- ================================================================== -/
 ```
 
 ## 5. 案例研究：深化布尔反射 (Case Study: Improving Reflection)
 
 ```lean
-/- ================================================================== -/
-
 theorem filter_not_empty_In (n : Nat) (l : list Nat)
     (h : filter (fun x => (n =? x)) l ≠ nil) : In n l := by
   sorry
@@ -926,15 +900,9 @@ def count (n : Nat) : list Nat → Nat
 ```lean
 theorem eqbP_practice (n : Nat) (l : list Nat) (h : count n l = 0) : ¬(In n l) := by
   sorry
-
-/- ================================================================== -/
 ```
 
 ## 6. 进阶综合练习 (Additional Exercises)
-
-```lean
-/- ================================================================== -/
-```
 
 ### 🎯 练习：`nostutter_defn` <Badge type="warning" text="3 星 · standard, especially useful" />
 
@@ -1062,15 +1030,11 @@ theorem pigeonhole_principle (hem : excluded_middle) (X : Type) (l1 l2 : list X)
     (hlen : Playground.lt (length l2) (length l1)) :
     repeats l1 := by
   sorry
-
-/- ================================================================== -/
 ```
 
 ## 7. 扩展案例：可验证的正则表达式匹配器 (Extended Exercise: A Verified Regular-Expression Matcher)
 
 ```lean
-/- ================================================================== -/
-
 abbrev ascii := _root_.Char
 
 def string := list ascii

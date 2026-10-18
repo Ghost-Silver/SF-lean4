@@ -24,15 +24,9 @@ STLC 的 `has_type` 关系定义了在一个上下文中项属于某个类型的
 
 本章构造了这样一个类型检查函数，并形式化证明了它的**可靠性 (Soundness)** 与**完备性 (Completeness)**。
 
-```lean
-/- ################################################################# -/
-```
-
 ## 1. 类型的判等比较 (Comparing Types)
 
 ```lean
-/- ################################################################# -/
-
 namespace STLCTypes
 
 open PLF.Stlc.STLC
@@ -72,15 +66,11 @@ theorem eqb_ty__eq (T1 T2 : ty) :
       | _ => intro h; contradiction
 
 end STLCTypes
-
-/- ################################################################# -/
 ```
 
 ## 2. 类型检查器初步尝试 (The Typechecker - First Try)
 
 ```lean
-/- ################################################################# -/
-
 namespace FirstTry
 
 open PLF.Stlc.STLC
@@ -116,15 +106,11 @@ def type_check (Gamma : context) (t : tm) : Option ty :=
       | _ => none
 
 end FirstTry
-
-/- ################################################################# -/
 ```
 
 ## 3. 单子风格的优雅类型检查器 (STLCChecker)
 
 ```lean
-/- ################################################################# -/
-
 namespace STLCChecker
 
 open PLF.Stlc.STLC
@@ -183,15 +169,11 @@ theorem type_checking_complete (Gamma : context) (t : tm) (T : ty) :
   sorry
 
 end STLCChecker
-
-/- ################################################################# -/
 ```
 
 ## 4. 扩展特性的类型检查器 (TypecheckerExtensions)
 
 ```lean
-/- ################################################################# -/
-
 namespace TypecheckerExtensions
 
 open PLF.MoreStlc.STLCExtended
@@ -342,15 +324,11 @@ theorem type_checking_complete (Gamma : context) (t : tm) (T : ty) :
   sorry
 
 end TypecheckerExtensions
-
-/- ################################################################# -/
 ```
 
 ## 5. 小步求值函数及其性质 (StepFunction)
 
 ```lean
-/- ################################################################# -/
-
 namespace StepFunction
 
 open PLF.MoreStlc.STLCExtended
@@ -468,15 +446,9 @@ theorem complete_stepf (t t' : tm) :
   sorry
 
 end StepFunction
-
-/- ################################################################# -/
 ```
 
 ## 6. 完整解析与解释器驱动 (StlcImpl)
-
-```lean
-/- ################################################################# -/
-```
 
 **** 练习: 5 星, standard, optional (stlc_impl)
 结合词法语法分析器与上述类型检查、小步求值函数，构造完整的端到端解释器。

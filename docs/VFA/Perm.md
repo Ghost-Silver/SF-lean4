@@ -62,15 +62,11 @@ theorem lia_example_3 : ∀ (f : Nat → Nat → Nat) a b x y,
     f x y > a * b → f x y + 3 ≥ a * b := by
   intro f a b x y h
   omega
-
-/- ################################################################# -/
 ```
 
 ## 2. 元素条件交换 (Swapping)
 
 ```lean
-/- ################################################################# -/
-
 /-- 若列表的前两个元素顺序颠倒，则将其交换；否则保持不变 -/
 def maybe_swap (al : List Nat) : List Nat :=
   match al with
@@ -89,15 +85,11 @@ theorem maybe_swap_321 :
 theorem maybe_swap_idempotent : ∀ al : List Nat,
     maybe_swap (maybe_swap al) = maybe_swap al := by
   sorry
-
-/- ################################################################# -/
 ```
 
 ## 3. 布尔反射 (Reflection)
 
 ```lean
-/- ################################################################# -/
-
 theorem eqb_reflect : ∀ x y : Nat, reflect (x = y) (x == y) := by
   intro x y
   cases h : (x == y) with
@@ -164,15 +156,11 @@ theorem reflect_example2 : ∀ a : Nat,
     (if a < 5 then a else 2) < 6 := by
   intro a
   split <;> omega
-
-/- ################################################################# -/
 ```
 
 ## 4. 列表置换关系 (Permutations)
 
 ```lean
-/- ################################################################# -/
-
 /-- 使用 Lean 4 内置的 `List.Perm` 形式化置换关系 -/
 abbrev Permutation {A : Type} (l1 l2 : List A) : Prop := List.Perm l1 l2
 ```
@@ -223,15 +211,11 @@ def first_le_second (al : List Nat) : Prop :=
 theorem maybe_swap_correct : ∀ al : List Nat,
     Permutation al (maybe_swap al) ∧ first_le_second (maybe_swap al) := by
   sorry
-
-/- ################################################################# -/
 ```
 
 ## 5. 元素全称命题与置换保持 (Forall and Permutations)
 
 ```lean
-/- ################################################################# -/
-
 /-- 列表元素全称满足谓词的归纳定义（对齐 Coq 的 `Forall`） -/
 inductive Forall {A : Type} (P : A → Prop) : List A → Prop where
   | Forall_nil : Forall P []

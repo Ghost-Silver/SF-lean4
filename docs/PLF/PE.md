@@ -35,15 +35,9 @@ X := 3; Y := 4
 当一个程序的**部分输入**在编译期已知（称为**静态数据 (Static Data)**），而其余输入未知（称为**动态数据 (Dynamic Data)**）时，
 偏求值器在已知数据上“预先执行”程序，展开循环、消除已知分支，从而生成一个更精简、更高效的**剩余程序 (Residual Program)**。
 
-```lean
-/- ################################################################# -/
-```
-
 ## 1. 推广常量折叠：部分状态 (Partial States)
 
 ```lean
-/- ################################################################# -/
-
 /-- 部分状态：以具象列表 `List (String × Nat)` 记录当前已确定取值的变量及其静态数值 -/
 abbrev pe_state := List (String × Nat)
 
@@ -93,15 +87,11 @@ theorem inbP : ∀ (A : Type) (eqb : A → A → Bool),
   (∀ a1 a2, reflect (a1 = a2) (eqb a1 a2)) →
   ∀ a l, reflect (In a l) (inb eqb a l) := by
   sorry
-
-/- ################################################################# -/
 ```
 
 ## 2. 算术表达式的偏求值 (Arithmetic Expressions)
 
 ```lean
-/- ################################################################# -/
-
 /-- 算术表达式的偏求值函数：结合部分状态折叠已知变量与常量 -/
 def pe_aexp (pe_st : pe_state) (a : aexp) : aexp :=
   match a with
@@ -177,15 +167,11 @@ theorem pe_consistent_update : ∀ st pe_st,
 theorem pe_aexp_correct : ∀ (pe_st : pe_state) (a : aexp) (st : state),
   aeval (pe_update st pe_st) a = aeval st (pe_aexp pe_st a) := by
   sorry
-
-/- ################################################################# -/
 ```
 
 ## 3. 布尔表达式的偏求值 (Boolean Expressions)
 
 ```lean
-/- ################################################################# -/
-
 /-- 布尔表达式的偏求值函数 -/
 def pe_bexp (pe_st : pe_state) (b : bexp) : bexp :=
   match b with
@@ -235,15 +221,11 @@ theorem test_pe_bexp2 : ∀ b : bexp,
 theorem pe_bexp_correct : ∀ (pe_st : pe_state) (b : bexp) (st : state),
   beval (pe_update st pe_st) b = beval st (pe_bexp pe_st b) := by
   sorry
-
-/- ################################################################# -/
 ```
 
 ## 4. 无循环命令的偏求值 (Commands Without Loops)
 
 ```lean
-/- ################################################################# -/
-
 /-- 从部分状态中移除指定变量（使其重新变为动态未知） -/
 def pe_remove (pe_st : pe_state) (V : String) : pe_state :=
   match pe_st with
@@ -442,15 +424,11 @@ theorem pe_com_correct :
   (pe_update st pe_st =[ c ]=> st'') ↔
   pe_ceval c' pe_st' st st'' := by
   sorry
-
-/- ################################################################# -/
 ```
 
 ## 5. 循环语句的偏求值 (Partial Evaluation of Loops)
 
 ```lean
-/- ################################################################# -/
-
 namespace Loop
 
 /-- 支持循环展开与在线卷起的偏求值关系 -/
@@ -657,15 +635,11 @@ theorem pe_com_correct :
   sorry
 
 end Loop
-
-/- ################################################################# -/
 ```
 
 ## 6. 流程图程序的偏求值 (Flowchart Programs)
 
 ```lean
-/- ################################################################# -/
-
 /-- 基本块 (Basic Block)：以连续赋值开始，以条件跳转或无条件跳转结束 -/
 inductive block (Label : Type) : Type where
   | Goto : Label → block Label

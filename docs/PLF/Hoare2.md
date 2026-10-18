@@ -44,6 +44,8 @@ set_option linter.unusedVariables false
 
 ---
 
+## 带标注程序 (Decorated Programs)
+
 ```lean
 namespace PLF.Hoare2
 
@@ -54,10 +56,6 @@ open PLF.Hoare
 
 /-- 占位断言（用于练习填空提示） -/
 def FILL_IN_HERE : Assertion := fun _ => True
-
--- #################################################################
--- * 带标注程序 (Decorated Programs)
--- #################################################################
 ```
 
 ### 1. 手工证明到带标注程序
@@ -69,6 +67,8 @@ while X ≠ 0 do
 end
 ```
 其外层规约为 `{{ True }} reduce_to_zero {{ X = 0 }}`。
+
+### 语法形式化 (Syntax)
 
 ```lean
 /-- 归零程序：反复自减直到 X 为 0 -/
@@ -99,10 +99,6 @@ theorem reduce_to_zero_correct' :
 theorem reduce_to_zero_correct''' :
   {{fun _ => True}} reduce_to_zero {{fun st => st X = 0}} := by
   exact reduce_to_zero_correct'
-
--- =================================================================
--- ** 语法形式化 (Syntax)
--- =================================================================
 ```
 
 ### 2. 带标注命令的抽象语法树
@@ -116,6 +112,10 @@ theorem reduce_to_zero_correct''' :
 - `DCWhile b P d Q`：带有循环体前置条件 `P`、循环体 `d`（其后置条件充当循环不变量）及最终后置条件 `Q` 的循环
 - `DCPre P d`：强化前置条件 `->> {{ P }} d`
 - `DCPost d Q`：弱化后置条件 `d ->> {{ Q }}`
+
+### 擦除与断言提取 (Erasure and Assertion Extraction)
+
+## 验证条件生成器与健全性 (Verification Conditions and Soundness)
 
 ```lean
 namespace DComFirstTry
@@ -170,9 +170,6 @@ def dec_while : decorated :=
         (fun st => True ∧ st X = 0))
       (fun st => st X = 0))
 
--- =================================================================
--- ** 擦除与断言提取 (Erasure and Assertion Extraction)
--- =================================================================
 
 /-- 抹除命令中的所有断言注解，恢复原始 Imp 程序 -/
 def erase (d : dcom) : com :=
@@ -235,10 +232,6 @@ def dec_while_triple_correct :
         (WHILE (BNot (BEq (AId X) (ANum 0))) DO (X ::= AMinus (AId X) (ANum 1)) END)
       {{fun st => st X = 0}} := by
   rfl
-
--- #################################################################
--- * 验证条件生成器与健全性 (Verification Conditions and Soundness)
--- #################################################################
 ```
 
 ### 3. 验证条件生成 (Verification Condition Generator)
@@ -246,6 +239,8 @@ def dec_while_triple_correct :
 `verification_conditions P d` 递归遍历带标注命令 `d` 并结合当前上下文供给的前置条件 `P`，
 生成一组纯命题合取（Verification Conditions）。
 若这组条件可被证明，则根据霍尔逻辑规则系统，三元组 `{{ P }} (erase d) {{ post d }}` 必定成立！
+
+## 经典程序验证实例 (Classic Verified Programs)
 
 ```lean
 /-- 核心验证条件生成函数 -/
@@ -379,10 +374,6 @@ theorem dec_while_correct :
   outer_triple_valid dec_while := by
   apply verification_conditions_correct
   exact vc_dec_while
-
--- #################################################################
--- * 经典程序验证实例 (Classic Verified Programs)
--- #################################################################
 ```
 
 ### 4. 加减法无临时变量交换程序 (Swapping)
@@ -471,6 +462,8 @@ theorem positive_difference_correct :
 {{ Y = X + Z }}
 ```
 
+## 循环不变量构造艺术 (Finding Loop Invariants)
+
 ```lean
 /-- 条件分支减加程序 -/
 def if_minus_plus_dec : decorated :=
@@ -516,10 +509,6 @@ def div_mod_dec (a b : Nat) : decorated :=
 theorem div_mod_outer_triple_valid : ∀ a b,
   outer_triple_valid (div_mod_dec a b) := by
   sorry
-
--- #################################################################
--- * 循环不变量构造艺术 (Finding Loop Invariants)
--- #################################################################
 ```
 
 ### 6. 慢速减法 (Slow Subtraction)
@@ -836,6 +825,8 @@ theorem dpow2_down_correct : ∀ n,
 
 ### 13. 斐波那契数列计算 (Fibonacci)
 
+### 极简带标注程序 (Improved Decorated Commands)
+
 ```lean
 /-- 斐波那契数列递归定义 -/
 def fib (n : Nat) : Nat :=
@@ -887,16 +878,14 @@ def dfib (n : Nat) : decorated :=
 theorem dfib_correct : ∀ n,
   outer_triple_valid (dfib n) := by
   sorry
-
--- =================================================================
--- ** 极简带标注程序 (Improved Decorated Commands)
--- =================================================================
 ```
 
 ### 14. 极简标注语法模块 (DComImproved)
 
 在实际验证工具中，绝大多数顺序复合与赋值语句的局部断言均可机械向前/向后传播，
 无需人工逐行书写。通过仅在最终后置条件与循环入口处要求显式标注，可大幅简化带标注程序。
+
+## 最弱前置条件 (Weakest Preconditions)
 
 ```lean
 namespace DComImproved
@@ -959,10 +948,6 @@ theorem verification_correct : ∀ d P,
   sorry
 
 end DComImproved
-
--- #################################################################
--- * 最弱前置条件 (Weakest Preconditions)
--- #################################################################
 ```
 
 ### 15. 最弱前置条件的形式化

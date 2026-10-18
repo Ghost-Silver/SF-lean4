@@ -27,15 +27,11 @@ namespace PLF.References
 
 ```lean
 namespace STLCRef
-
-/- ################################################################# -/
 ```
 
 ## 1. 语法与值 (Syntax and Values)
 
 ```lean
-/- ################################################################# -/
-
 /--
 扩展类型的归纳定义：
 - `Ty_Nat`: 自然数
@@ -138,15 +134,11 @@ def manual_grade_for_compact_update : Option (Nat × String) := none
 
 ```lean
 def manual_grade_for_type_safety_violation : Option (Nat × String) := none
-
-/- ################################################################# -/
 ```
 
 ## 2. 存储与操作语义 (Stores and Operational Semantics)
 
 ```lean
-/- ################################################################# -/
-
 /-- 存储堆模型：以项的列表表示，下标为物理位置 -/
 abbrev store : Type := List tm
 
@@ -258,15 +250,11 @@ theorem cyclic_store :
       (tm_unit, List.cons (tm_abs "x" Ty_Nat (tm_app (tm_deref (tm_loc 1)) (tm_var "x")))
                  (List.cons (tm_abs "x" Ty_Nat (tm_app (tm_deref (tm_loc 0)) (tm_var "x"))) List.nil)) := by
   sorry
-
-/- ################################################################# -/
 ```
 
 ## 3. 存储定型与定型关系 (Store Typings and Typing)
 
 ```lean
-/- ################################################################# -/
-
 abbrev store_ty : Type := List ty
 
 def store_Tlookup (n : Nat) (ST : store_ty) : ty :=
@@ -320,15 +308,11 @@ inductive has_type (ST : store_ty) : context → tm → ty → Prop where
       has_type ST Gamma t1 (Ty_Ref T2) →
       has_type ST Gamma t2 T2 →
       has_type ST Gamma (tm_assign t1 t2) Ty_Unit
-
-/- ################################################################# -/
 ```
 
 ## 4. 性质验证：良定存储与类型安全 (Properties)
 
 ```lean
-/- ################################################################# -/
-
 /-- 粗糙的保型性陈述（未考虑存储扩张与良定性，不可证明） -/
 def preservation_wrong : Prop :=
   ∀ ST T t st t' st',
@@ -452,15 +436,11 @@ theorem progress (ST : store_ty) (t : tm) (st : store) (T : ty) :
     store_well_typed ST st →
     value t ∨ ∃ t' st', step (t, st) (t', st') := by
   sorry
-
-/- ################################################################# -/
 ```
 
 ## 5. 引用与图灵完备停机问题 (References and Nontermination)
 
 ```lean
-/- ################################################################# -/
-
 namespace RefsAndNontermination
 
 def x : String := "x"

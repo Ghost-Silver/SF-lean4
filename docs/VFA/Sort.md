@@ -23,15 +23,9 @@ open VFA.Perm
 2. 形式化规约“已排序”的数学定义（归纳关系 `sorted` 与索引定义 `sorted'` / `sorted''`）；
 3. 严格形式化证明插入排序的功能正确性：**保序性**（输出为有序列表）与**置换性**（输出是输入的合法排列，不增删元素）。
 
-```lean
-/- ################################################################# -/
-```
-
 ## 1. 插入排序程序实现 (The Insertion-Sort Program)
 
 ```lean
-/- ################################################################# -/
-
 /-- 向已排序的列表中插入一个元素，使其仍然保持升序 -/
 def insert (i : Nat) (l : List Nat) : List Nat :=
   match l with
@@ -47,15 +41,11 @@ def sort (l : List Nat) : List Nat :=
 theorem sort_pi :
   sort [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5] = [1, 1, 2, 3, 3, 4, 5, 5, 5, 6, 9] := by
   rfl
-
-/- ################################################################# -/
 ```
 
 ## 2. 正确性规约 (Specification of Correctness)
 
 ```lean
-/- ################################################################# -/
-
 /-- 核心规约：已排序列表的归纳定义 -/
 inductive sorted : List Nat → Prop where
   | sorted_nil : sorted []
@@ -85,15 +75,9 @@ def sorted' (al : List Nat) : Prop :=
 /-- 排序算法的整体正确性规约：输出必须既是有序的，又是原输入的一个置换 -/
 def is_a_sorting_algorithm (f : List Nat → List Nat) : Prop :=
   ∀ al, Permutation al (f al) ∧ sorted (f al)
-
-/- ################################################################# -/
 ```
 
 ## 3. 正确性证明 (Proof of Correctness)
-
-```lean
-/- ################################################################# -/
-```
 
 ### 🎯 练习：`insert_sorted` <Badge type="warning" text="3 星 · standard" />
 证明插入操作保持列表的有序性。
@@ -136,15 +120,9 @@ theorem sort_perm : ∀ l, Permutation l (sort l) := by
 theorem insertion_sort_correct :
   is_a_sorting_algorithm sort := by
   sorry
-
-/- ################################################################# -/
 ```
 
 ## 4. 规约的等价性验证 (Validating the Specification)
-
-```lean
-/- ################################################################# -/
-```
 
 ### 🎯 练习：`sorted_sorted'` <Badge type="danger" text="4 星 · advanced" />
 证明归纳定义的有序性蕴含基于索引的有序性定义。
@@ -160,15 +138,9 @@ theorem sorted_sorted' : ∀ al, sorted al → sorted' al := by
 ```lean
 theorem sorted'_sorted : ∀ al, sorted' al → sorted al := by
   sorry
-
-/- ################################################################# -/
 ```
 
 ## 5. 基于替代规约直接证明正确性 (Alternative Spec)
-
-```lean
-/- ################################################################# -/
-```
 
 ### 🎯 练习：`insert_sorted'` <Badge type="danger" text="5 星 · standard, optional" />
 

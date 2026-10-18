@@ -46,6 +46,8 @@ set_option linter.unusedVariables false
 6. **程序近似关系（Program Approximation）**：
    - 模拟与单向精化关系。
 
+## 1. 行为等价性的定义 (Behavioral Equivalence)
+
 ```lean
 namespace PLF.Equiv
 
@@ -55,10 +57,6 @@ open Imp.aexp
 open Imp.bexp
 open Imp.com
 open ceval
-
--- #################################################################
--- * 1. 行为等价性的定义 (Behavioral Equivalence)
--- #################################################################
 ```
 
 ### 1.1 表达式等价性
@@ -112,6 +110,8 @@ theorem bequiv_example : (BEq (AMinus (AId X) (AId X)) (ANum 0)) ==b BTrue := by
 “第一个命令能执行终止于 `st'`” 与 “第二个命令能执行终止于 `st'`” 是**充分必要**的。
 这意味着它们要么以完全相同的最终状态停机，要么均无限循环发散。
 
+## 2. 基础等价定理与练习 (Simple Examples)
+
 ```lean
 /-- 命令行为等价定义：对于任意初态与末态，大步语义关系完全双向等价 -/
 def cequiv (c1 c2 : com) : Prop :=
@@ -119,10 +119,6 @@ def cequiv (c1 c2 : com) : Prop :=
 
 /-- 命令等价符号记号 -/
 scoped notation:50 c1:51 " ==c " c2:51 => cequiv c1 c2
-
--- #################################################################
--- * 2. 基础等价定理与练习 (Simple Examples)
--- #################################################################
 ```
 
 ### 2.1 关于 `SKIP` 的等价性
@@ -357,6 +353,8 @@ theorem assign_aequiv (X : String) (a : aexp) (ha : (AId X) ==a a) :
 
 给定以下 9 个 Imp 程序，将彼此行为等价的程序分组为等价类列表。
 
+## 3. 行为等价性的代数性质 (Properties of Behavioral Equivalence)
+
 ```lean
 def prog_a : com := (WHILE (BGt (AId X) (ANum 0)) DO (X ::= AId X + ANum 1) END)
 def prog_b : com :=
@@ -379,10 +377,6 @@ def equiv_classes : List (List com) :=
   [[prog_a, prog_d], [prog_b, prog_e], [prog_c, prog_h], [prog_f, prog_g], [prog_i]]
 
 def manual_grade_for_equiv_classes : Option (Nat × String) := none
-
--- #################################################################
--- * 3. 行为等价性的代数性质 (Properties of Behavioral Equivalence)
--- #################################################################
 ```
 
 ### 3.1 等价关系基本性质（自反、对称、传递）
@@ -521,12 +515,10 @@ theorem congruence_example :
 是否能构造出一种命令之间的二元关系，它是等价关系（自反、对称、传递），但**不是同余关系**？
 例如：命令长度相等关系、或者在某一特定固定状态下产生相同输出的关系。
 
+## 4. 程序变换及其可靠性 (Program Transformations)
+
 ```lean
 def manual_grade_for_not_congr : Option (Nat × String) := none
-
--- #################################################################
--- * 4. 程序变换及其可靠性 (Program Transformations)
--- #################################################################
 ```
 
 ### 4.1 程序变换可靠性的形式化定义
@@ -750,6 +742,8 @@ theorem fold_constants_com_sound : ctrans_sound fold_constants_com := by
 
 ### 🎯 练习：`optimize_0plus_var` <Badge type="danger" text="4 星 · standard, optional" />
 
+## 5. 证明程序不等价 (Proving Inequivalence)
+
 ```lean
 /-- 算术表达式 (0 + n) 代数优化器 -/
 def optimize_0plus_aexp (a : aexp) : aexp :=
@@ -808,10 +802,6 @@ theorem optimizer_sound : ctrans_sound optimizer := by
   apply trans_cequiv c (fold_constants_com c) (optimize_0plus_com (fold_constants_com c))
   · exact fold_constants_com_sound c
   · exact optimize_0plus_com_sound (fold_constants_com c)
-
--- #################################################################
--- * 5. 证明程序不等价 (Proving Inequivalence)
--- #################################################################
 ```
 
 ### 5.1 变量代换与反例构造
@@ -898,14 +888,12 @@ theorem better_subst_equiv (x1 x2 : String) (a1 a2 : aexp)
 
 证明死循环与 `SKIP` 必然是不等价的。
 
+## 6. 拓展研讨：非确定性语言 Himp (Nondeterministic Imp)
+
 ```lean
 theorem inequiv_exercise :
     ¬ (WHILE BTrue DO SKIP END) ==c SKIP := by
   sorry
-
--- #################################################################
--- * 6. 拓展研讨：非确定性语言 Himp (Nondeterministic Imp)
--- #################################################################
 ```
 
 ### 6.1 非确定性命令 HAVOC
@@ -1036,6 +1024,8 @@ theorem p3_p4_inequiv : ¬ (p3 ==c p4) := by
 
 ### 🎯 练习：`p5_p6_equiv` <Badge type="danger" text="5 星 · advanced, optional" />
 
+## 7. 附加综合练习 (Additional Exercises)
+
 ```lean
 def p5 : com :=
   .CWhile (bexp.BNeq (.AId X) (.ANum 1)) (.CHavoc X)
@@ -1047,10 +1037,6 @@ theorem p5_p6_equiv : p5 ==c p6 := by
   sorry
 
 end Himp
-
--- #################################################################
--- * 7. 附加综合练习 (Additional Exercises)
--- #################################################################
 ```
 
 ### 🎯 练习：`swap_noninterfering_assignments` <Badge type="warning" text="3 星 · standard, optional" />

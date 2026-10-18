@@ -40,6 +40,8 @@ set_option linter.unusedVariables false
 
 ---
 
+## 模型论视角 (Hoare Logic and Model Theory)
+
 ```lean
 namespace PLF.HoareAsLogic
 
@@ -47,10 +49,6 @@ open Imp
 open Maps
 open aexp bexp com
 open PLF.Hoare
-
--- #################################################################
--- * 模型论视角 (Hoare Logic and Model Theory)
--- #################################################################
 ```
 
 ### 1. 模型论有效性定义
@@ -58,14 +56,12 @@ open PLF.Hoare
 回顾模型论中三元组的语义含义：
 若命令 `c` 在满足前置条件 `P` 的任意状态 `st` 下开始执行且终止于 `st'`，则 `st'` 必定满足 `Q`。
 
+## 证明论视角与推导关系 (Derivability)
+
 ```lean
 /-- 模型论三元组语义有效性 -/
 def valid (P : Assertion) (c : com) (Q : Assertion) : Prop :=
   ∀ st st', st =[ c ]=> st' → P st → Q st'
-
--- #################################################################
--- * 证明论视角与推导关系 (Derivability)
--- #################################################################
 ```
 
 ### 2. 证明论公理与推理规则系统
@@ -77,6 +73,8 @@ def valid (P : Assertion) (c : com) (Q : Assertion) : Prop :=
 - `H_If`：条件分支规则
 - `H_While`：循环规则
 - `H_Consequence`：包含前置条件强化与后置条件弱化的推论规则
+
+## 可靠性与完备性 (Soundness and Completeness)
 
 ```lean
 /-- 霍尔逻辑形式推导关系（归纳定义） -/
@@ -141,16 +139,14 @@ theorem provable_true_post : ∀ c P,
 theorem provable_false_pre : ∀ c Q,
   derivable (fun _ => False) c Q := by
   sorry
-
--- #################################################################
--- * 可靠性与完备性 (Soundness and Completeness)
--- #################################################################
 ```
 
 ### 3. 霍尔逻辑的可靠性 (Soundness)
 
 可靠性定理断言：形式系统绝不推导出虚假结论。
 若一个三元组可推导，则它在状态求值模型下必然是语义有效的。
+
+### 最弱前置条件与相对完备性 (Weakest Preconditions and Completeness)
 
 ```lean
 /--
@@ -160,16 +156,14 @@ theorem provable_false_pre : ∀ c Q,
 theorem hoare_sound : ∀ P c Q,
   derivable P c Q → valid P c Q := by
   sorry
-
--- =================================================================
--- ** 最弱前置条件与相对完备性 (Weakest Preconditions and Completeness)
--- =================================================================
 ```
 
 ### 4. 最弱前置条件 (Weakest Preconditions)
 
 给定命令 `c` 与期望后置条件 `Q`，其语义最弱前置条件由下列谓词给出：
 `wp c Q = fun s => ∀ s', s =[ c ]=> s' → Q s'`。
+
+## 结语：判定性极限 (Postscript: Decidability)
 
 ```lean
 /-- 语义最弱前置条件定义 -/
@@ -214,10 +208,6 @@ theorem wp_invariant : ∀ b c Q,
 theorem hoare_complete : ∀ P c Q,
   valid P c Q → derivable P c Q := by
   sorry
-
--- #################################################################
--- * 结语：判定性极限 (Postscript: Decidability)
--- #################################################################
 ```
 
 ### 5. 霍尔逻辑为什么不可判定？

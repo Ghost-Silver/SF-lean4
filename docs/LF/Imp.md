@@ -50,14 +50,12 @@ Imp 包含了命令式程序设计语言的所有核心要素：
    - 扩展支持 `break` 语句（`BreakImp` 模块）；
    - 扩展支持 C 风格 `for` 循环（`ForImp` 模块）。
 
+## 算术与布尔表达式 (AExp)
+
 ```lean
 namespace Imp
 
 open Maps
-
--- #################################################################
--- * 算术与布尔表达式 (AExp)
--- #################################################################
 ```
 
 ### 1. 表达式的抽象语法与求值
@@ -111,9 +109,7 @@ def beval (b : bexp) : Bool :=
   | bexp.BNot b1 => !beval b1
   | bexp.BAnd b1 b2 => beval b1 && beval b2
 
--- -----------------------------------------------------------------
 -- *** 表达式优化 (Optimization)
--- -----------------------------------------------------------------
 ```
 
 ### 1.1 常量折叠优化 (0 + e ==> e)
@@ -166,9 +162,7 @@ theorem optimize_0plus_sound : ∀ a, aeval (optimize_0plus a) = aeval a := by
     show aeval (optimize_0plus a1) * aeval (optimize_0plus a2) = aeval a1 * aeval a2
     rw [ih1, ih2]
 
--- -----------------------------------------------------------------
 -- *** 证明自动化与策略组合 (Automation & Tacticals)
--- -----------------------------------------------------------------
 ```
 
 ### 1.2 证明自动化与高阶策略
@@ -316,9 +310,7 @@ theorem invert_example1 : ∀ a, optimize_0plus a = aexp.ANum 0 → aeval a = 0 
   | AMult a1 a2 =>
     nomatch H
 
--- -----------------------------------------------------------------
 -- *** 线性算术自动化 (Linear Arithmetic Automation)
--- -----------------------------------------------------------------
 ```
 
 ### 1.3 现代线性算术决策过程：`omega` 策略
@@ -341,9 +333,7 @@ theorem add_assoc__lia : ∀ m n p : Nat, m + (n + p) = (m + n) + p := by
   intro m n p
   omega
 
--- -----------------------------------------------------------------
 -- *** 关系式求值 (Evaluation as a Relation)
--- -----------------------------------------------------------------
 ```
 
 ### 1.4 作为关系的求值
@@ -461,12 +451,12 @@ theorem bevalR_iff_beval : ∀ b bv, (b ==>b bv) ↔ beval b = bv := by
 
 end AExp
 
--- -----------------------------------------------------------------
 -- *** 拓展关系：带除法与不确定性的表达式
--- -----------------------------------------------------------------
 ```
 
 ### 1.5 关系式求值的威力：偏函数与非确定性
+
+## 完整 Imp 语言：包含变量的表达式与程序状态
 
 ```lean
 namespace aevalR_division
@@ -523,15 +513,13 @@ inductive aevalR : aexp → Nat → Prop where
 scoped notation:90 (priority := high) a " ==> " n => aevalR a n
 
 end aevalR_extended
-
--- #################################################################
--- * 完整 Imp 语言：包含变量的表达式与程序状态
--- #################################################################
 ```
 
 ### 2. 程序状态 (State) 与含变量表达式
 
 我们使用第 8 章引入的全域字典 `total_map Nat`（即以变量名 `String` 为键，自然数 `Nat` 为值的函数）来建模程序运行时的**内存状态 (State)**。
+
+## 命令与程序语句 (Commands)
 
 ```lean
 /-- 程序执行状态：将程序变量名映射到其当前存储的自然数值 -/
@@ -609,10 +597,6 @@ theorem aexp2 : aeval (X !-> 5; Y !-> 4; empty_st) (Z + (X * Y)) = 20 := by
 
 theorem bexp1 : beval (X !-> 5) (bexp.BAnd bexp.BTrue (bexp.BNot (bexp.BLe X 4))) = true := by
   rfl
-
--- #################################################################
--- * 命令与程序语句 (Commands)
--- #################################################################
 ```
 
 ### 3. 命令抽象语法与语法糖
@@ -623,6 +607,8 @@ Imp 的命令结构包含：
 - 语句顺序连接 `c1 ;; c2`
 - 条件分支 `TEST b THEN c1 ELSE c2 FI`
 - 循环 `WHILE b DO c END`
+
+## 命令的大步操作语义 (Evaluating Commands)
 
 ```lean
 /-- Imp 命令语句抽象语法 -/
@@ -673,10 +659,6 @@ def loop : com :=
   WHILE bexp.BTrue DO
     SKIP
   END
-
--- #################################################################
--- * 命令的大步操作语义 (Evaluating Commands)
--- #################################################################
 ```
 
 ### 4. 大步操作语义 (Natural / Big-Step Operational Semantics)
@@ -755,6 +737,8 @@ theorem ceval_example2 :
 
 编写从 1 累加到 X 并将总和存入 Y 的累加程序 `pup_to_n`，并证明在初始状态 `X = 2` 下的执行推导。
 
+### 大步语义的确定性 (Determinism of Evaluation)
+
 ```lean
 def pup_to_n : com :=
   Y ::= 0 ;;
@@ -768,16 +752,14 @@ theorem pup_to_2_ceval :
     pup_to_n
   ]=> (X !-> 0; Y !-> 3; X !-> 1; Y !-> 2; Y !-> 0; X !-> 2; empty_st) := by
   sorry
-
--- =================================================================
--- ** 大步语义的确定性 (Determinism of Evaluation)
--- =================================================================
 ```
 
 ### 4.1 大步操作语义的确定性
 
 尽管我们将 `ceval` 定义为了关系而非函数，但对于 Imp 而言，它的执行是完全确定的：
 从同一个初始状态 `st` 出发执行同一个程序 `c`，终态若存在则必然唯一！
+
+## Imp 程序的形式化推理 (Reasoning About Imp Programs)
 
 ```lean
 theorem ceval_deterministic : ∀ c st st1 st2,
@@ -835,10 +817,6 @@ theorem ceval_deterministic : ∀ c st st1 st2,
       have eq : st' = st'0 := ih1 st'0 h1'
       subst eq
       exact ih2 st2 h2'
-
--- #################################################################
--- * Imp 程序的形式化推理 (Reasoning About Imp Programs)
--- #################################################################
 ```
 
 ### 5. 程序规约与推导
@@ -917,15 +895,13 @@ theorem no_whiles_eqv : ∀ c, no_whiles c = true ↔ no_whilesR c := by
 
 证明任意不包含 while 循环的程序必定在任何初始状态下都会终止。
 
+## 栈式虚拟机与编译器正确性验证
+
 ```lean
 theorem no_whiles_terminating : ∀ c, no_whilesR c → ∀ st, ∃ st', st =[ c ]=> st' := by
   sorry
 
 def manual_grade_for_no_whiles_terminating : Option (Nat × String) := none
-
--- #################################################################
--- * 栈式虚拟机与编译器正确性验证
--- #################################################################
 ```
 
 ### 6. 栈式计算机与编译器正确性形式化
@@ -1042,6 +1018,8 @@ theorem s_compile_correct : ∀ (st : state) (e : aexp),
 
 实现布尔短路求值函数 `beval_short_circuit`。
 
+## 进阶扩展：支持 Break 语句 (BreakImp)
+
 ```lean
 def beval_short_circuit (st : state) (b : bexp) : Bool :=
   match b with
@@ -1056,10 +1034,6 @@ def beval_short_circuit (st : state) (b : bexp) : Bool :=
       match beval st b1 with
       | false => false
       | true => beval st b2
-
--- #################################################################
--- * 进阶扩展：支持 Break 语句 (BreakImp)
--- #################################################################
 ```
 
 ### 7. 控制流增强：添加 Break 语句
@@ -1181,6 +1155,8 @@ theorem while_break_true : ∀ b c st st',
 
 证明带有 Break 的扩展语言其求值仍然保持确定性。
 
+## 进阶扩展：支持 For 循环 (ForImp)
+
 ```lean
 theorem ceval_deterministic : ∀ (c : com) st st1 st2 s1 s2,
     st =[ c ]=> st1 // s1 →
@@ -1189,10 +1165,6 @@ theorem ceval_deterministic : ∀ (c : com) st st1 st2 s1 s2,
   sorry
 
 end BreakImp
-
--- #################################################################
--- * 进阶扩展：支持 For 循环 (ForImp)
--- #################################################################
 ```
 
 ### 8. 控制流增强：添加 For 循环

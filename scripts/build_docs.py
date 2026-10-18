@@ -138,11 +138,39 @@ def format_exercise_heading(line: str) -> str:
 
     return f'### 🎯 练习：{rest}'
 
+def is_divider_line(line: str) -> bool:
+    s = line.strip()
+    return bool(re.match(r'^(?:/[-*]\s*[-=#*]{5,}\s*[-*]/|--\s*[-=#*]{5,})$', s))
+
+def clean_code_block(code_str: str):
+    lines = code_str.split('\n')
+    cleaned_lines = []
+    banner_headings = []
+    
+    for l in lines:
+        s = l.strip()
+        if is_divider_line(s):
+            continue
+        # 识别类似 -- * 战术组合子 (Tacticals) 的章节标题
+        m_h1 = re.match(r'^--\s*[*#]{1}\s+(.*)$', s)
+        m_h2 = re.match(r'^--\s*[*#]{2}\s+(.*)$', s)
+        if m_h2:
+            banner_headings.append(f"### {m_h2.group(1).strip()}")
+            continue
+        elif m_h1:
+            banner_headings.append(f"## {m_h1.group(1).strip()}")
+            continue
+        cleaned_lines.append(l)
+        
+    code_body = '\n'.join(cleaned_lines).strip()
+    return banner_headings, code_body
+
 def convert_lean_to_markdown(lean_content: str, chapter_title: str) -> str:
     """
     智能解析 .lean 文件：
     将 /-! ... -/ 块作为一级 Markdown 正文；
-    格式化练习题标题；
+    规范化练习题标题；
+    过滤纯分隔符注释块（如 /- === -/），并将 -- * 标题提升为正规 Markdown 标题；
     将代码段落包裹在 ```lean ... ``` 中。
     """
     output = []
@@ -156,7 +184,11 @@ def convert_lean_to_markdown(lean_content: str, chapter_title: str) -> str:
         if current_code:
             code_str = "".join(current_code).strip()
             if code_str:
-                output.append(f"\n```lean\n{code_str}\n```\n")
+                banner_headings, code_body = clean_code_block(code_str)
+                for h in banner_headings:
+                    output.append(f"\n{h}\n")
+                if code_body:
+                    output.append(f"\n```lean\n{code_body}\n```\n")
             current_code = []
             
     while idx < length:

@@ -50,15 +50,9 @@ abbrev O := 0
 
 /-- 自然数前驱函数别名，对齐原版 Coq 的 `pred` -/
 abbrev pred := Nat.pred
-
-/- ================================================================== -/
 ```
 
 ## 1. 命题是一等公民 (Propositions as First-Class Citizens)
-
-```lean
-/- ================================================================== -/
-```
 
 在 Lean 4 中，每一个良构（Well-formed）的表达式都具备其对应的类型。
 逻辑断言亦不例外：任何我们在 Lean 4 中试图陈述或证明的命题，其类型均为 `Prop`（命题宇宙，Sort 0）。
@@ -126,15 +120,9 @@ theorem succ_inj : injective S := by
 #check @Eq
 -- 在 Lean 4 中，等号 `=` 本质上是多态二元归纳谓词 `Eq` 的中缀语法糖：
 -- @Eq : {α : Sort u} → α → α → Prop
-
-/- ================================================================== -/
 ```
 
 ## 2. 逻辑联结词 (Logical Connectives)
-
-```lean
-/- ================================================================== -/
-```
 
 ### 2.1 合取 (Conjunction - `∧` / `And`)
 
@@ -590,15 +578,9 @@ theorem leb_plus_exists (n m : Nat) (h : (n <=? m) = true) :
 theorem plus_exists_leb (n m : Nat) (h : ∃ x, m = n + x) :
     (n <=? m) = true := by
   sorry
-
-/- ================================================================== -/
 ```
 
 ## 3. 用命题进行编程 (Programming with Propositions)
-
-```lean
-/- ================================================================== -/
-```
 
 既然命题也是一等公民，我们完全可以编写接受普通数据并递归构造复合命题的**命题值递归函数**！
 最经典的范例莫过于定义某个元素 $x$ 是否出现在多态列表 $l$ 中的谓词 `In`：
@@ -700,15 +682,9 @@ theorem combine_odd_even_elim_even (Podd Peven : Nat → Prop) (n : Nat)
     (heven : odd n = false) :
     Peven n := by
   sorry
-
-/- ================================================================== -/
 ```
 
 ## 4. 将定理应用于参数 (Applying Theorems to Arguments)
-
-```lean
-/- ================================================================== -/
-```
 
 在依值类型论中，**定理即类型，证明即程序（Curry-Howard Isomorphism）**。
 一个普遍全称量化的定理（如 `∀ n m, n + m = m + n`）实际上就是一个接受参数并返回特定类型证明项的**函数**！
@@ -782,15 +758,9 @@ theorem lemma_application_ex {n : Nat} {ns : list Nat}
   rcases h1 with ⟨m, hm, _⟩
   rw [Nat.mul_zero] at hm
   exact hm.symm
-
-/- ================================================================== -/
 ```
 
 ## 5. 处理可判定性质与布尔反射 (Working with Decidable Properties)
-
-```lean
-/- ================================================================== -/
-```
 
 在形式化系统中，我们有两种截然不同的方式表达断言：
 1. **布尔计算 (`Bool`)**：只有 `true` 与 `false` 两种可能，算法可判定（Decidable），可在 `if-then-else` 中作为分支条件；
@@ -933,15 +903,9 @@ def forallb {X : Type} (test : X → Bool) : list X → Bool
 theorem forallb_true_iff (X : Type) (test : X → Bool) (l : list X) :
     forallb test l = true ↔ All (fun x => test x = true) l := by
   sorry
-
-/- ================================================================== -/
 ```
 
 ## 6. 证明助手的元逻辑 (The Logic of Coq / Lean 4)
-
-```lean
-/- ================================================================== -/
-```
 
 ### 6.1 函数外延性 (Functional Extensionality)
 

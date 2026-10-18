@@ -39,16 +39,14 @@ set_option linter.ambiguousOpen false
    - **链式/正规单步闭包 (`clos_refl_trans_1n`)**：将传递规则正规化为单步归纳展开（$1+n$ 结构），显著简化归纳推导树；
    - **等价性定理 (`rtc_rsc_coincide`)**：形式化证明结构式闭包与单步链式闭包定义在逻辑上的完全等价性。
 
+## 关系 (Relations)
+
 ```lean
 namespace Rel
 
 open IndProp
 open IndProp.Playground hiding le_trans
 open IndProp.Playground.le
-
--- #################################################################
--- * 关系 (Relations)
--- #################################################################
 ```
 
 ### 1. 二元关系的基本概念
@@ -64,22 +62,18 @@ def relation (X : Type) := X → X → Prop
 自然数上的小于等于关系 `le` 就是一个典型的二元关系，通常记作 `n1 <= n2`。
 我们可以检查它的类型：
 
+## 基本性质 (Basic Properties)
+
 ```lean
 #check (le : Nat → Nat → Prop)
 #check (le : relation Nat)
-
--- #################################################################
--- * 基本性质 (Basic Properties)
--- #################################################################
 ```
 
 正如任何学过离散数学课程的人所了解的那样，关于关系本身有非常丰富的代数与结构分类，
 包括单值性（偏函数）、自反性、传递性、对称性、反对称性等。
 
 ```lean
--- -----------------------------------------------------------------
 -- *** 偏函数 (Partial Functions)
--- -----------------------------------------------------------------
 ```
 
 ### 2.1 偏函数 (Partial Functions)
@@ -139,9 +133,7 @@ theorem empty_relation_partial_function :
     partial_function empty_relation := by
   sorry
 
--- -----------------------------------------------------------------
 -- *** 自反关系 (Reflexive Relations)
--- -----------------------------------------------------------------
 ```
 
 ### 2.2 自反关系 (Reflexive Relations)
@@ -158,9 +150,7 @@ theorem le_reflexive : reflexive le := by
   intro n
   exact le_n
 
--- -----------------------------------------------------------------
 -- *** 传递关系 (Transitive Relations)
--- -----------------------------------------------------------------
 ```
 
 ### 2.3 传递关系 (Transitive Relations)
@@ -253,9 +243,7 @@ theorem le_S_n : ∀ n m, (n + 1 <= m + 1) → (n <= m) := by
 theorem le_Sn_n : ∀ n, ¬ (n + 1 <= n) := by
   sorry
 
--- -----------------------------------------------------------------
 -- *** 对称与反对称关系 (Symmetric and Antisymmetric Relations)
--- -----------------------------------------------------------------
 ```
 
 ### 2.4 对称与反对称关系
@@ -301,9 +289,7 @@ theorem le_antisymmetric : antisymmetric le := by
 theorem le_step : ∀ n m p, n < m → m <= p + 1 → n <= p := by
   sorry
 
--- -----------------------------------------------------------------
 -- *** 等价关系与偏序关系 (Equivalence Relations & Orderings)
--- -----------------------------------------------------------------
 ```
 
 ### 2.5 等价关系、偏序与预序
@@ -326,6 +312,8 @@ def order {X : Type} (R : relation X) :=
 
 **预序**（Preorder）与偏序类似，但不需要满足反对称性（只要求自反性与传递性）。
 
+## 自反传递闭包 (Reflexive, Transitive Closure)
+
 ```lean
 /-- 预序关系定义 -/
 def preorder {X : Type} (R : relation X) :=
@@ -334,10 +322,6 @@ def preorder {X : Type} (R : relation X) :=
 /-- `<=` 是自然数上的偏序关系 -/
 theorem le_order : order le := by
   refine ⟨le_reflexive, le_antisymmetric, le_trans⟩
-
--- #################################################################
--- * 自反传递闭包 (Reflexive, Transitive Closure)
--- #################################################################
 ```
 
 ### 3. 自反传递闭包 (Reflexive, Transitive Closure)

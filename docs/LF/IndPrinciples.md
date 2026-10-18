@@ -47,15 +47,11 @@ namespace IndPrinciples
 
 open Poly
 open Poly.list
-
-/- ================================================================== -/
 ```
 
 ## 1. 基础归纳法则与策略底层机制 (Basics)
 
 ```lean
-/- ================================================================== -/
-
 /-- 自然数的一阶佩亚诺归纳法则定理 -/
 def nat_ind (P : Nat → Prop) (h0 : P 0) (hS : ∀ n, P n → P (n + 1)) (n : Nat) : P n :=
   Nat.recOn n h0 hS
@@ -152,15 +148,9 @@ theorem Toy_correct : ∃ (f : Bool → Toy) (g : Nat → Toy → Toy),
       (∀ (n : Nat) (t : Toy), P t → P (g n t)) →
       ∀ t : Toy, P t := by
   sorry
-
-/- ================================================================== -/
 ```
 
 ## 2. 多态数据类型的归纳法则 (Polymorphism)
-
-```lean
-/- ================================================================== -/
-```
 
 ### 🎯 练习：`tree` <Badge type="tip" text="1 星 · standard, optional" />
 
@@ -216,15 +206,11 @@ inductive foo (X Y : Type) : Type where
 inductive foo' (X : Type) : Type where
   | C1 (l : list X) (f : foo' X) : foo' X
   | C2 : foo' X
-
-/- ================================================================== -/
 ```
 
 ## 3. 显式归纳假设与命题命名 (Induction Hypotheses)
 
 ```lean
-/- ================================================================== -/
-
 def P_m0r (n : Nat) : Prop :=
   n * 0 = 0
 
@@ -268,15 +254,11 @@ theorem add_assoc'' : ∀ n m p : Nat, Passoc n m p := by
 /-- 使用显式命题 Pcomm 重写加法交换律证明 -/
 theorem add_comm''' : ∀ n m : Nat, Pcomm n m := by
   sorry
-
-/- ================================================================== -/
 ```
 
 ## 4. 命题上的归纳法则 (Induction Principles for Propositions)
 
 ```lean
-/- ================================================================== -/
-
 /-- 备选偶数定义 -/
 inductive ev' : Nat → Prop where
   | ev'_0 : ev' 0
@@ -301,15 +283,11 @@ inductive le1 : Nat → Nat → Prop where
 inductive le2 (n : Nat) : Nat → Prop where
   | le2_n : le2 n n
   | le2_S m (H : le2 n m) : le2 n (m + 1)
-
-/- ================================================================== -/
 ```
 
 ## 5. 显式构造归纳证明项 (Explicit Proof Objects for Induction)
 
 ```lean
-/- ================================================================== -/
-
 /-- 递归函数显式构造自然数归纳证明 -/
 def build_proof
     (P : Nat → Prop)

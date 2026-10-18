@@ -26,6 +26,8 @@ set_option linter.unusedVariables false
 3. 证明步数索引求值函数与大步操作语义关系之间的**完全等价性**；
 4. 借助求值函数的确定性，给出命令大步操作语义确定性定理的一行优雅替代证明！
 
+## 失败的尝试：无步数限制的求值器
+
 ```lean
 namespace ImpCEvalFun
 
@@ -35,10 +37,6 @@ open Imp.com
 open Imp.aexp
 open Imp.bexp
 open ceval
-
--- #################################################################
--- * 失败的尝试：无步数限制的求值器
--- #################################################################
 ```
 
 ### 1. 为什么全函数不能直接解释包含循环的语言？
@@ -48,6 +46,8 @@ open ceval
 然而，当遇到 `while` 循环时，全函数要求每次递归调用的参数结构严格变小。
 对于死循环（例如 `while true do skip end`），参数根本不会缩减。
 若逻辑系统允许定义不终止的递归函数，将直接导致逻辑不一致（如可以构造出类型为 `False` 的不动点项），彻底破坏证明助理的稳健性。
+
+## 步数索引求值器 (Step-Indexed Evaluator)
 
 ```lean
 /-- 第一版尝试：省略 `while` 的不完整求值器（`while` 处仅能伪造返回原状态） -/
@@ -61,10 +61,6 @@ def ceval_step1 (st : state) (c : com) : state :=
   | CIf b c1 c2 =>
       if beval st b then ceval_step1 st c1 else ceval_step1 st c2
   | CWhile _ _ => st  -- 伪造实现，无法真正执行循环
-
--- #################################################################
--- * 步数索引求值器 (Step-Indexed Evaluator)
--- #################################################################
 ```
 
 ### 2. 步数索引（燃料机制）的引入
@@ -191,6 +187,8 @@ theorem pup_to_n_1 :
 编写一个 Imp 程序，若 X 是偶数则将 Z 置为 0，否则将 Z 置为 1。
 使用随后的 `peven0` 至 `peven4` 测试用例来验证你的程序。
 
+## 关系语义与步数索引语义的等价性 (Relational vs. Step-Indexed Evaluation)
+
 ```lean
 /-- 奇偶判断程序实现 -/
 def peven : com :=
@@ -206,10 +204,6 @@ theorem peven1 : test_ceval (X !-> 1) peven = some (0, 0, 1) := by sorry
 theorem peven2 : test_ceval (X !-> 2) peven = some (0, 0, 0) := by sorry
 theorem peven3 : test_ceval (X !-> 3) peven = some (0, 0, 1) := by sorry
 theorem peven4 : test_ceval (X !-> 4) peven = some (0, 0, 0) := by sorry
-
--- #################################################################
--- * 关系语义与步数索引语义的等价性 (Relational vs. Step-Indexed Evaluation)
--- #################################################################
 ```
 
 ### 5. 步数索引语义可靠性：步数求值推导关系大步语义
@@ -363,6 +357,8 @@ theorem ceval_step_more (i1 i2 : Nat) (st st' : state) (c : com) :
 则必存在足够大的步数预算 `i`，使得 `ceval_step st c i = some st'`。
 提示：对大步语义推导证据 `Hce : st =[ c ]=> st'` 进行归纳，在顺序执行和循环场景下结合 `ceval_step_more`。
 
+## 大步语义确定性的又一证明 (Determinism of Evaluation Again)
+
 ```lean
 /-- 步数索引求值函数的完备性定理：只要大步语义能推导出终止，必存在足够步数予以验证 -/
 theorem ceval__ceval_step (c : com) (st st' : state) :
@@ -376,10 +372,6 @@ theorem ceval_and_ceval_step_coincide (c : com) (st st' : state) :
   constructor
   · apply ceval__ceval_step
   · apply ceval_step__ceval
-
--- #################################################################
--- * 大步语义确定性的又一证明 (Determinism of Evaluation Again)
--- #################################################################
 ```
 
 ### 7. 借助函数语义重新证明大步语义的确定性

@@ -47,6 +47,8 @@ set_option linter.unusedVariables false
 
 ---
 
+## 玩具语言 (A Toy Language)
+
 ```lean
 namespace PLF.Smallstep
 
@@ -57,14 +59,16 @@ open sinstr
 
 /-- 占位断言（用于练习填空提示） -/
 def FILL_IN_HERE : Nat := 0
-
--- #################################################################
--- * 玩具语言 (A Toy Language)
--- #################################################################
 ```
 
 ### 1. 语法与大步求值
 极简语言仅包含常量数值 `C n` 与加法复合 `P t1 t2`。
+
+### 单步规约初探 (SimpleArith1)
+
+## 二元关系与确定性 (Relations and Determinism)
+
+## 值、强进益与规范形式 (Values, Progress and Normal Forms)
 
 ```lean
 /-- 极简算术表达式类型 -/
@@ -87,9 +91,6 @@ inductive eval : tm → Nat → Prop where
 
 scoped notation:50 t " ==> " n => eval t n
 
--- =================================================================
--- ** 单步规约初探 (SimpleArith1)
--- =================================================================
 
 namespace SimpleArith1
 
@@ -118,9 +119,6 @@ theorem test_step_2 :
 
 end SimpleArith1
 
--- #################################################################
--- * 二元关系与确定性 (Relations and Determinism)
--- #################################################################
 
 /-- 抽象二元关系定义 -/
 def relation (X : Type) := X → X → Prop
@@ -173,16 +171,16 @@ theorem step_deterministic_alt : deterministic SimpleArith1.step :=
   SimpleArith2.step_deterministic
 
 end SimpleArith3
-
--- #################################################################
--- * 值、强进益与规范形式 (Values, Progress and Normal Forms)
--- #################################################################
 ```
 
 ### 2. 基于值（Values）的单步规约
 
 机器的停机状态称为**值（Values）**。对于加法语言，值恰好就是常数 `C n`。
 利用谓词 `value`，我们可以更优雅地书写求值顺序规则 `ST_P2`。
+
+### 值与规范形式的非等价变体 (Temp Modules)
+
+## 多步规约闭包 (Multi-Step Reduction)
 
 ```lean
 /-- 值谓词：判断项是否为计算结果 -/
@@ -251,9 +249,6 @@ theorem nf_same_as_value : ∀ t,
   · exact nf_is_value t
   · exact value_is_nf t
 
--- =================================================================
--- ** 值与规范形式的非等价变体 (Temp Modules)
--- =================================================================
 
 namespace Temp1
 
@@ -402,16 +397,18 @@ def manual_grade_for_properties_of_altered_step : Option (Nat × String) := none
 
 end Temp5
 end Temp4
-
--- #################################################################
--- * 多步规约闭包 (Multi-Step Reduction)
--- #################################################################
 ```
 
 ### 3. 多步规约关系 `multi`
 
 `multi R` 是单步关系 `R` 的自反传递闭包（在逻辑基础 `Rel` 章节中称为 `clos_refl_trans_1n`）。
 记作 `t -->* t'`。
+
+### 大步语义与小步语义等价性 (Equivalence)
+
+## 复合语言示例 (Combined Language)
+
+## Imp 语言的小步操作语义 (Small-Step Imp)
 
 ```lean
 /-- 二元关系自反传递闭包 -/
@@ -532,9 +529,6 @@ theorem step_normalizing :
           · exact multistep_congr_2 (tm.C n1) t2 (tm.C n2) (value.v_C n1) hsteps2
           · exact multi_R _ _ _ _ (step.ST_PCC n1 n2)
 
--- =================================================================
--- ** 大步语义与小步语义等价性 (Equivalence)
--- =================================================================
 
 /--
 **** 练习: 3 星, standard (eval__multistep)
@@ -572,9 +566,6 @@ theorem evalF_eval : ∀ t n,
   evalF t = n ↔ eval t n := by
   sorry
 
--- #################################################################
--- * 复合语言示例 (Combined Language)
--- #################################################################
 
 namespace Combined
 
@@ -613,10 +604,6 @@ theorem combined_strong_progress :
   sorry
 
 end Combined
-
--- #################################################################
--- * Imp 语言的小步操作语义 (Small-Step Imp)
--- #################################################################
 ```
 
 ### 4. 算术、布尔与命令的小步规约
@@ -625,6 +612,8 @@ end Combined
 - 算术表达式小步单步转移：`a / st -->a a'`
 - 布尔表达式小步单步转移：`b / st -->b b'`
 - 命令在环境中的转移：`(c, st) --> (c', st')`
+
+## 并发 Imp 语言 (Concurrent Imp - CImp)
 
 ```lean
 /-- 算术值谓词 -/
@@ -721,16 +710,14 @@ inductive cstep : (com × state) → (com × state) → Prop where
   | CS_While (st : state) (b1 : bexp) (c1 : com) :
       cstep (com.CWhile b1 c1, st)
             (com.CIf b1 (com.CSeq c1 (com.CWhile b1 c1)) com.CSkip, st)
-
--- #################################################################
--- * 并发 Imp 语言 (Concurrent Imp - CImp)
--- #################################################################
 ```
 
 ### 5. 并发小步语义与非确定性交织
 
 扩展命令语法，增加并行算子 `c1 || c2`：
 只要任一线程能走一步，整体即可选择该线程执行单步规约，从而产生丰富的交织行为。
+
+## 栈式虚拟机小步语义与编译器正确性 (A Small-Step Stack Machine)
 
 ```lean
 namespace CImp
@@ -820,13 +807,11 @@ theorem par_loop_any_X : ∀ n,
   sorry
 
 end CImp
-
--- #################################################################
--- * 栈式虚拟机小步语义与编译器正确性 (A Small-Step Stack Machine)
--- #################################################################
 ```
 
 ### 6. 基于小步规约的编译器正确性证明
+
+## 规约自动化与求值规范化示例 (Normalization Examples)
 
 ```lean
 /-- 虚拟机执行栈 -/
@@ -924,9 +909,6 @@ theorem compiler_is_correct_aux :
 theorem compiler_is_correct : compiler_is_correct_statement := by
   sorry
 
--- #################################################################
--- * 规约自动化与求值规范化示例 (Normalization Examples)
--- #################################################################
 
 theorem step_example1 :
   multi step (tm.P (tm.C 3) (tm.P (tm.C 3) (tm.C 4))) (tm.C 10) := by

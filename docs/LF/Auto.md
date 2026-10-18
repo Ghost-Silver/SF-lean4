@@ -34,6 +34,8 @@ set_option linter.unusedVariables false
 作为贯穿全章的引导案例，我们将重新审视来自 [Imp](file:///Users/ghostface/LuoJin/SF-lean4/SFLean4/LF/Imp.lean) 章节的
 大步操作语义确定性定理 `ceval_deterministic`，并在多次自动化重构中见证证明代码如何从数十行冗长分支精简为极简自适应脚本！
 
+## 经典案例：手动证明的回顾
+
 ```lean
 namespace Auto
 
@@ -43,10 +45,6 @@ open Imp.com
 open Imp.aexp
 open Imp.bexp
 open ceval
-
--- #################################################################
--- * 经典案例：手动证明的回顾
--- #################################################################
 ```
 
 ### 1. 手动证明：`ceval_deterministic` 的初始版本
@@ -54,6 +52,8 @@ open ceval
 以下证明基本重现了我们在 `Imp.lean` 中对确定性定理的手动推导。
 仔细观察可以发现：其中存在大量的 `reflexivity`，多处结构相同的反演矛盾（`discriminate`），
 以及针对归纳假设的重复重写。
+
+## 自动证明搜索：`auto` 与 `solve_by_elim`
 
 ```lean
 /-- 大步语义确定性定理（初始全手动证明版） -/
@@ -106,10 +106,6 @@ theorem ceval_deterministic (c : com) (st st1 st2 : state) :
       have eq1 := ih1 s h1'
       subst eq1
       exact ih2 st2 h2'
-
--- #################################################################
--- * 自动证明搜索：`auto` 与 `solve_by_elim`
--- #################################################################
 ```
 
 ### 2. 自动化证明搜索初步
@@ -198,6 +194,8 @@ theorem auto_example_5' (P Q R S T U W : Prop) :
 在 Coq 中可使用 `auto using ...` 引入特定引理。
 在 Lean 4 中，直接向 `solve_by_elim [...]` 传递引理名称即可。
 
+## 渐进式自动化重构确定性证明
+
 ```lean
 /-- 自然数反对称性引理 -/
 theorem le_antisym (n m : Nat) : n ≤ m ∧ m ≤ n → n = m := by
@@ -221,13 +219,11 @@ theorem auto_example_7' (x : Nat) :
   intro ⟨h1, h2⟩
   dsimp [is_fortytwo]
   omega
-
--- #################################################################
--- * 渐进式自动化重构确定性证明
--- #################################################################
 ```
 
 ### 5. 第一轮精简：在分支末端使用自动化
+
+## 自动化稳健性验证：Repeat 模块
 
 ```lean
 /-- 第一轮重构：在显式分支中消除繁琐的叶子推理 -/
@@ -264,10 +260,6 @@ theorem ceval_deterministic'''' (c : com) (st st1 st2 : state) :
     st =[ c ]=> st2 →
     st1 = st2 :=
   ceval_deterministic c st st1 st2
-
--- #################################################################
--- * 自动化稳健性验证：Repeat 模块
--- #################################################################
 ```
 
 ### 6. 自动化对语言演进的适应性：增加 `repeat ... until ... end` 命令
@@ -276,6 +268,8 @@ theorem ceval_deterministic'''' (c : com) (st st1 st2 : state) :
 - 循环体始终至少执行一次；
 - 每次执行后检查哨兵条件：若为 `false` 则继续循环，若为 `true` 则退出。
 自动化推导结构能确保即使语法新增分支，确定性定理依然能平滑证明！
+
+## 延迟实例化与存在元变量 (eapply 与 eauto)
 
 ```lean
 namespace Repeat
@@ -387,10 +381,6 @@ theorem ceval_deterministic' (c : com) (st st1 st2 : state) :
   ceval_deterministic c st st1 st2
 
 end Repeat
-
--- #################################################################
--- * 延迟实例化与存在元变量 (eapply 与 eauto)
--- #################################################################
 ```
 
 ### 7. 存在元变量的威力：`apply` 原生即 `eapply`

@@ -1,11 +1,9 @@
-/-
-  ======================================================================
-  《软件基础》(Software Foundations) 卷一：逻辑基础 (Logical Foundations)
-  第一章：基础 (Basics: Functional Programming in Lean 4)
-  ======================================================================
+/-!
+# 《软件基础》(Software Foundations) 卷一：逻辑基础 (Logical Foundations)
+## 第一章：基础 (Basics: Functional Programming in Lean 4)
 
-  原著：Benjamin C. Pierce et al.
-  形式化迁移与中文精译：针对 Lean 4 现代依赖类型论体系严格重构
+原著：Benjamin C. Pierce et al.  
+形式化迁移与中文精译：针对 Lean 4 现代依赖类型论体系严格重构
 -/
 
 /-!

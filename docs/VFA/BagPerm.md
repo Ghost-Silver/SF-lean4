@@ -58,15 +58,11 @@ theorem bag_eqv_cons : ∀ x b1 b2, bag_eqv b1 b2 → bag_eqv (x :: b1) (x :: b2
   intro x b1 b2 h n
   dsimp [count]
   rw [h n]
-
-/- ################################################################# -/
 ```
 
 ## 1. 正确性规约 (Correctness)
 
 ```lean
-/- ################################################################# -/
-
 /-- 基于包等价性的排序正确性规约 -/
 def is_a_sorting_algorithm' (f : List Nat → List Nat) : Prop :=
   ∀ al, bag_eqv al (f al) ∧ sorted (f al)
@@ -96,15 +92,9 @@ theorem insertion_sort_correct :
 
 ```lean
 def manual_grade_for_permutations_vs_multiset : Option (Nat × String) := none
-
-/- ################################################################# -/
 ```
 
 ## 2. 置换与包等价性的双向等价 (Permutations and Multisets)
-
-```lean
-/- ################################################################# -/
-```
 
 ### 🎯 练习：`perm_bag` <Badge type="warning" text="3 星 · standard" />
 

@@ -48,15 +48,9 @@ import SFLean4.LF.IndProp
 
 ```lean
 namespace Maps
-
-/- ================================================================== -/
 ```
 
 ## 1. 标识符与全域映射 (Identifiers and Total Maps)
-
-```lean
-/- ================================================================== -/
-```
 
 在 [Lists] 章节中，我们曾专门定义了全新的归纳类型 `id` 作为词典的键；
 从本章开始，我们将直接采用标准库的字符串类型 `String` 作为映射的统一键类型。
@@ -105,15 +99,9 @@ theorem update_example1 : examplemap' "baz" = false := by rfl
 theorem update_example2 : examplemap' "foo" = true := by rfl
 theorem update_example3 : examplemap' "quux" = false := by rfl
 theorem update_example4 : examplemap' "bar" = true := by rfl
-
-/- ================================================================== -/
 ```
 
 ## 2. 全域映射的基本代数性质 (Properties of Total Maps)
-
-```lean
-/- ================================================================== -/
-```
 
 ### 🎯 练习：`t_apply_empty` <Badge type="tip" text="1 星 · standard, optional" />
 
@@ -169,15 +157,9 @@ theorem t_update_permute (A : Type) (m : total_map A) (v1 v2 : A) (x1 x2 : Strin
     (h : x2 ≠ x1) :
     (x1 !-> v1 ; x2 !-> v2 ; m) = (x2 !-> v2 ; x1 !-> v1 ; m) := by
   sorry
-
-/- ================================================================== -/
 ```
 
 ## 3. 偏映射及其代数提升 (Partial Maps)
-
-```lean
-/- ================================================================== -/
-```
 
 偏映射（Partial Maps）可在全域映射之上直接优雅地定义：
 其值域类型为 `Option A`，且未指定项的默认值恒定为 `none`。
@@ -237,15 +219,9 @@ theorem update_permute (A : Type) (m : partial_map A) (x1 x2 : String) (v1 v2 : 
     (x1 !-> v1 ; x2 !-> v2 ; m) = (x2 !-> v2 ; x1 !-> v1 ; m) := by
   apply t_update_permute
   exact h
-
-/- ================================================================== -/
 ```
 
 ## 4. 偏映射的包含关系 (Map Inclusion)
-
-```lean
-/- ================================================================== -/
-```
 
 在程序语言类型系统（如 PLF 卷的简单类型 Lambda 演算 STLC）中，
 我们常常需要表述“上下文 $\Gamma'$ 是上下文 $\Gamma$ 的超集（扩充）”。

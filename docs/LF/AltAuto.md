@@ -101,11 +101,7 @@ theorem re_opt_e_match {T : Type} (re : reg_exp T) (s : Poly.list T) (m : s =~ r
 如果优化规则进一步扩展，这种重复性将迅速膨胀至无法忍受的程度。
 接下来，我们将学习通过**战术组合子 (Tacticals)** 消除重复。
 
-```lean
--- #################################################################
--- * 战术组合子 (Tacticals)
--- #################################################################
-```
+## 战术组合子 (Tacticals)
 
 ### 1. 尝试组合子：`try`
 
@@ -294,19 +290,19 @@ theorem In10' : In 10 [1; 2; 3; 4; 5; 6; 7; 8; 9; 10] := by
 
 证明 100 是偶数。你的证明脚本应当非常简短（例如利用 `repeat` 与构造子）。
 
+## 正则表达式深度优化案例研究
+
 ```lean
 theorem ev100 : ev 100 := by
   sorry
-
--- #################################################################
--- * 正则表达式深度优化案例研究
--- #################################################################
 ```
 
 ### 🎯 练习：`re_opt` <Badge type="danger" text="4 星 · standard" />
 
 考察一个更加强大的正则表达式优化器 `re_opt`：
 它能够消除拼接空集、拼接空串、并集空集以及多余的闭包运算。
+
+## 摆脱显式命名假说的策略
 
 ```lean
 /-- 全功能正则表达式化简优化器 -/
@@ -409,10 +405,6 @@ theorem re_opt_match' {T : Type} (re : reg_exp T) (s : Poly.list T) (m : s =~ re
   sorry
 
 def manual_grade_for_re_opt : Option (Nat × String) := none
-
--- #################################################################
--- * 摆脱显式命名假说的策略
--- #################################################################
 ```
 
 ### 1. 显式命名的局限性与维护负担
@@ -487,6 +479,8 @@ theorem many_eq' (n m o p : Nat) :
 
 `constructor` 尝试在当前归纳类型的构造子列表中匹配第一个能够统一当前目标的构造子，并将其 `apply` 到目标上。
 
+## 自动求解器 (Automatic Solvers)
+
 ```lean
 /-- 使用 constructor 自动应用归纳谓词的构造子 -/
 theorem constructor_example (n : Nat) : ev (n + n) := by
@@ -499,10 +493,6 @@ theorem constructor_example (n : Nat) : ev (n + n) := by
     rw [h_eq]
     constructor
     assumption
-
--- #################################################################
--- * 自动求解器 (Automatic Solvers)
--- #################################################################
 ```
 
 ### 1. 线性整数算术：`omega` (对应 Coq 的 `lia`)
@@ -605,6 +595,8 @@ theorem intuition_simplify2' (x y : Nat) (P Q : Nat → Prop) :
 以下定理来自前面章节，曾需要繁琐的手工证明。
 现在请使用自动求解器（如 `omega`, `congr`, `solve_by_elim` 等）一行完成证明。
 
+## 自动证明搜索 (Search Tactics)
+
 ```lean
 theorem plus_id_exercise_from_basics (n m o : Nat) :
     n = m → m = o → n + m = m + o := by
@@ -621,10 +613,6 @@ theorem S_injective_from_tactics (n m : Nat) :
 theorem or_distributes_over_and_from_logic (P Q R : Prop) :
     P ∨ (Q ∧ R) ↔ (P ∨ Q) ∧ (P ∨ R) := by
   sorry
-
--- #################################################################
--- * 自动证明搜索 (Search Tactics)
--- #################################################################
 ```
 
 ### 1. `auto` 与 `solve_by_elim`
@@ -784,6 +772,8 @@ def manual_grade_for_pumping_redux_strong : Option (Nat × String) := none
 在 Lean 4 中，元变量（Metavariables，形如 `?m`）被设计为系统的**一等公民**。
 普通的 `apply` 会自动生成未约束的元变量子目标，不需要记忆特殊的 `eapply`！
 
+## 战术语言与元编程 (Tactic Metaprogramming)
+
 ```lean
 /-- 显式提供中间项的传递性应用 -/
 theorem trans_example1 (a b c d : Nat) :
@@ -818,10 +808,6 @@ theorem trans_example2 (a b c d : Nat) :
     a ≤ d := by
   intro h1 h2
   exact Nat.le_trans h1 h2
-
--- #################################################################
--- * 战术语言与元编程 (Tactic Metaprogramming)
--- #################################################################
 ```
 
 ### 1. 战术宏 (Tactic Macros)
@@ -898,6 +884,8 @@ theorem andb3_exchange (b c d : Bool) :
 
 以下定理无法单纯由基础 `destructpf` 解决：
 
+## 目标模式匹配 (Pattern Matching on Proof State)
+
 ```lean
 theorem andb_true_elim2 (b c : Bool) :
     (b && c) = true → c = true := by
@@ -921,10 +909,6 @@ theorem andb_true_elim2' (b c : Bool) :
 theorem andb3_exchange' (b c d : Bool) :
     (b && c) && d = (b && d) && c := by
   sorry
-
--- #################################################################
--- * 目标模式匹配 (Pattern Matching on Proof State)
--- #################################################################
 ```
 
 ### 2. 匹配证明状态：Coq 的 `match goal` 与 Lean 4 的宏匹配
@@ -985,6 +969,8 @@ theorem match_ex5 (P Q : Prop) : P → Q → P := by
 例如：`| x :: x :: _ => true` 会引发编译报错。
 而在证明状态的元层级模式匹配中，求解器允许匹配具有相同类型的两项。
 
+## 自定义命题重言式求解器
+
 ```lean
 /-- 再次观察常规列表拼接定理 -/
 theorem app_nil_r' {X : Type} (lst : Poly.list X) :
@@ -1026,10 +1012,6 @@ theorem plus_n_Sm (n m : Nat) :
 theorem plus_n_Sm' (n m : Nat) :
     Nat.succ (n + m) = n + Nat.succ m := by
   omega
-
--- #################################################################
--- * 自定义命题重言式求解器
--- #################################################################
 ```
 
 ### 3. 实现极简蕴含重言式判定宏：`imp_intuition`
@@ -1092,6 +1074,8 @@ theorem nor_not (P : Prop) :
 构造能够全自动处理包含 `nor`、合取、析取与否定命题的判定策略。
 在下列三个定理的证明中，每个都应当能够一键证毕。
 
+## 章节全景回顾 (Review)
+
 ```lean
 /-- 练习：nor 交换律重构 -/
 theorem nor_comm' (P Q : Prop) :
@@ -1109,10 +1093,6 @@ theorem nor_not_and' (P Q : Prop) :
   sorry
 
 def manual_grade_for_nor_intuition : Option (Nat × String) := none
-
--- #################################################################
--- * 章节全景回顾 (Review)
--- #################################################################
 ```
 
 在本章中，我们系统学习了现代证明助理中构建高效、健壮证明的关键技术：

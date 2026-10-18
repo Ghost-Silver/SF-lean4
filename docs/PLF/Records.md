@@ -24,15 +24,11 @@ namespace PLF.Records
 
 ```lean
 namespace STLCExtendedRecords
-
-/- ################################################################# -/
 ```
 
 ## 1. 语法与操作语义 (Syntax and Operational Semantics)
 
 ```lean
-/- ################################################################# -/
-
 namespace FirstTry
 
 /-- 关联列表别名 -/
@@ -188,15 +184,11 @@ inductive step : tm → tm → Prop where
       step (tm_rcons i v1 tr2) (tm_rcons i v1 tr2')
 
 def multistep : tm → tm → Prop := PLF.Smallstep.multi step
-
-/- ################################################################# -/
 ```
 
 ## 2. 定型规则 (Typing)
 
 ```lean
-/- ################################################################# -/
-
 /-- 类型级字段类型查找函数 -/
 def Tlookup (i : String) (Tr : ty) : Option ty :=
   match Tr with
@@ -232,15 +224,9 @@ inductive has_type : context → tm → ty → Prop where
       record_ty Tr →
       record_tm tr →
       has_type Gamma (tm_rcons i t tr) (Ty_RCons i T Tr)
-
-/- ################################################################# -/
 ```
 
 ## 3. 示例与反例验证 (Examples)
-
-```lean
-/- ################################################################# -/
-```
 
 **** 练习: 2 星, standard (examples)
 验证记录定型与投影求值规则的正面用例与非法反例。
@@ -267,15 +253,11 @@ theorem typing_nonexample_2 (y : String) :
                (tm_abs "a" (Ty_RCons "i1" A Ty_RNil) (tm_rproj (tm_var "a") "i1"))
                (tm_rcons "i1" (tm_var y) (tm_rcons "i2" (tm_var y) tm_rnil))) T := by
   sorry
-
-/- ################################################################# -/
 ```
 
 ## 4. 定型性质验证 (Properties of Typing)
 
 ```lean
-/- ################################################################# -/
-
 /-- 良构记录类型的字段查找必得良构类型 -/
 theorem wf_rcd_lookup (i : String) (T Ti : ty) :
     well_formed_ty T →

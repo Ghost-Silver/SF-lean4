@@ -38,16 +38,14 @@ set_option linter.unusedVariables false
 
 ---
 
+## 断言 (Assertions)
+
 ```lean
 namespace PLF.Hoare
 
 open Imp
 open Maps
 open aexp bexp com
-
--- #################################################################
--- * 断言 (Assertions)
--- #################################################################
 ```
 
 ### 1. 状态断言 (Assertions)
@@ -64,6 +62,10 @@ namespace ExAssertions
 
 **** 练习: 1 星, standard, optional (assertions)
 使用自然语言（中文）转述下列断言的含义。
+
+### 断言记号与提升 (Notations for Assertions)
+
+### 断言蕴含 (Assertion Implication)
 
 ```lean
 /-- 断言 1：状态中变量 X 的值不大于变量 Y 的值 -/
@@ -84,9 +86,6 @@ def assertion4 : Assertion :=
 
 end ExAssertions
 
--- =================================================================
--- ** 断言记号与提升 (Notations for Assertions)
--- =================================================================
 
 /-- 算术表达式断言类型：从状态到自然数的映射 -/
 def Aexp : Type := state → Nat
@@ -117,16 +116,14 @@ def assertion8 : Assertion := fun st => st Z * st Z ≤ st X ∧ ¬ ((st Z + 1) 
 def assertion9 : Assertion := fun st => st X + st Y > max (st Y) (st X)
 
 end ExamplePrettyAssertions
-
--- =================================================================
--- ** 断言蕴含 (Assertion Implication)
--- =================================================================
 ```
 
 ### 2. 断言的蕴含关系
 
 给定两个断言 `P` 与 `Q`，若在任意状态下只要 `P` 成立则 `Q` 亦成立，我们称 `P` 蕴含 `Q`，记作 `P ->> Q`。
 若两者互相蕴含，则记作 `P <<->> Q`。
+
+## 霍尔三元组 (Hoare Triples)
 
 ```lean
 /-- 断言蕴含关系 -/
@@ -136,10 +133,6 @@ def assert_implies (P Q : Assertion) : Prop :=
 infix:80 " ->> " => assert_implies
 
 notation:80 P " <<->> " Q => (P ->> Q) ∧ (Q ->> P)
-
--- #################################################################
--- * 霍尔三元组 (Hoare Triples)
--- #################################################################
 ```
 
 ### 3. 霍尔三元组的形式化定义
@@ -185,6 +178,8 @@ macro_rules
 8) `{{X = 0}} while X = 0 do X := X + 1 end {{X = 1}}`：有效。
 9) `{{X = 1}} while X <> 0 do X := X + 1 end {{X = 100}}`：有效（死循环永不终止，结论虚真）。
 
+## 证明规则 (Proof Rules)
+
 ```lean
 /--
 **** 练习: 1 星, standard (hoare_post_true)
@@ -203,19 +198,17 @@ theorem hoare_pre_false : ∀ (P Q : Assertion) (c : com),
   (∀ st, ¬ P st) →
   {{P}} c {{Q}} := by
   sorry
-
--- #################################################################
--- * 证明规则 (Proof Rules)
--- #################################################################
 ```
 
 ### 4. 结构化证明规则 (Proof Rules)
 
-```lean
--- =================================================================
--- ** 空操作规则 (Skip)
--- =================================================================
+### 空操作规则 (Skip)
 
+### 顺序复合规则 (Sequencing)
+
+### 赋值规则 (Assignment)
+
+```lean
 /-- 空操作证明规则：SKIP 保持任意断言 P -/
 theorem hoare_skip : ∀ P,
   {{P}} SKIP {{P}} := by
@@ -223,9 +216,6 @@ theorem hoare_skip : ∀ P,
   cases H
   exact HP
 
--- =================================================================
--- ** 顺序复合规则 (Sequencing)
--- =================================================================
 
 /-- 顺序执行证明规则 -/
 theorem hoare_seq : ∀ P Q R c1 c2,
@@ -237,10 +227,6 @@ theorem hoare_seq : ∀ P Q R c1 c2,
   | E_Seq _ _ _ st_mid _ h1 h2 =>
     have hq := H1 st st_mid h1 HP
     exact H2 st_mid st' h2 hq
-
--- =================================================================
--- ** 赋值规则 (Assignment)
--- =================================================================
 ```
 
 ### 5. 赋值规则与断言代换 (Assertion Substitution)
@@ -298,6 +284,8 @@ theorem hoare_asgn_examples1 :
 
 **** 练习: 2 星, standard, optional (hoare_asgn_examples2)
 
+### 结果推论规则 (Rule of Consequence)
+
 ```lean
 theorem hoare_asgn_examples2 :
   ∃ P,
@@ -335,10 +323,6 @@ theorem hoare_asgn_fwd_exists :
     (X ::= a)
   {{fun st => ∃ m, P (t_update st X m) ∧ st X = aeval (t_update st X m) a}} := by
   sorry
-
--- =================================================================
--- ** 结果推论规则 (Rule of Consequence)
--- =================================================================
 ```
 
 ### 6. 推论规则 (Rule of Consequence)
@@ -436,6 +420,8 @@ theorem hoare_asgn_example1''' : {{fun _ => True}} (X ::= ANum 1) {{fun st => st
 
 **** 练习: 2 星, standard (hoare_asgn_examples_2)
 
+### 顺序复合与赋值结合 (Sequencing + Assignment)
+
 ```lean
 theorem assertion_sub_ex1' :
   {{ fun st => st X ≤ 5 }}
@@ -449,9 +435,6 @@ theorem assertion_sub_ex2' :
   {{ fun st => 0 ≤ st X ∧ st X ≤ 5 }} := by
   sorry
 
--- =================================================================
--- ** 顺序复合与赋值结合 (Sequencing + Assignment)
--- =================================================================
 
 theorem hoare_asgn_example3 : ∀ (a : aexp) (n : Nat),
   {{fun st => aeval st a = n}}
@@ -468,6 +451,8 @@ theorem hoare_asgn_example3 : ∀ (a : aexp) (n : Nat),
 ```
 
 **** 练习: 2 星, standard, especially useful (hoare_asgn_example4)
+
+### 条件分支语句规则 (Conditionals)
 
 ```lean
 theorem hoare_asgn_example4 :
@@ -501,10 +486,6 @@ theorem invalid_triple : ¬ (∀ (a : aexp) (n : Nat),
       (X ::= ANum 3 ;; Y ::= a)
     {{ fun st => st Y = n }}) := by
   sorry
-
--- =================================================================
--- ** 条件分支语句规则 (Conditionals)
--- =================================================================
 ```
 
 ### 7. 条件分支规则 (Conditionals)
@@ -620,9 +601,7 @@ theorem if_minus_plus :
   {{fun st => st Y = st X + st Z}} := by
   sorry
 
--- -----------------------------------------------------------------
 -- *** 单边条件分支 (One-sided Conditionals)
--- -----------------------------------------------------------------
 ```
 
 ### 8. 扩展模块：单边条件分支 If1
@@ -723,6 +702,8 @@ theorem hoare_asgn : ∀ Q X a,
 
 **** 练习: 2 星, standard (hoare_if1_good)
 
+### 循环语句规则 (While Loops)
+
 ```lean
 theorem hoare_if1_good :
   valid_hoare_triple
@@ -732,10 +713,6 @@ theorem hoare_if1_good :
   sorry
 
 end If1
-
--- =================================================================
--- ** 循环语句规则 (While Loops)
--- =================================================================
 ```
 
 ### 9. 循环不变式与 While 循环规则 (While Loops)
@@ -824,9 +801,7 @@ theorem always_loop_hoare : ∀ Q,
   intro _
   exact H (com.CWhile bexp.BTrue com.CSkip) Heval rfl
 
--- -----------------------------------------------------------------
 -- *** 练习：Repeat-Until 循环
--- -----------------------------------------------------------------
 ```
 
 ### 10. 扩展模块：RepeatExercise
@@ -901,6 +876,10 @@ theorem ex1_repeat_works :
 
 **** 练习: 4 星, advanced, optional (hoare_repeat)
 
+## 补充练习 (Additional Exercises)
+
+### 非确定性随机赋值 Havoc
+
 ```lean
 theorem hoare_repeat : ∀ P Q (b : bexp) c,
   valid_hoare_triple P c Q →
@@ -911,14 +890,6 @@ theorem hoare_repeat : ∀ P Q (b : bexp) c,
 end RepeatExercise
 
 def manual_grade_for_hoare_repeat : Option (Nat × String) := none
-
--- #################################################################
--- * 补充练习 (Additional Exercises)
--- #################################################################
-
--- =================================================================
--- ** 非确定性随机赋值 Havoc
--- =================================================================
 ```
 
 ### 11. 扩展模块：Himp (Havoc)
@@ -988,16 +959,14 @@ theorem hoare_havoc : ∀ (Q : Assertion) (X : String),
 
 **** 练习: 3 星, advanced (havoc_post)
 
+### 断言与假定 (Assert and Assume)
+
 ```lean
 theorem havoc_post : ∀ (P : Assertion) (X : String),
   valid_hoare_triple P (com.CHavoc X) (fun st => ∃ n : Nat, P (t_update st X n)) := by
   sorry
 
 end Himp
-
--- =================================================================
--- ** 断言与假定 (Assert and Assume)
--- =================================================================
 ```
 
 ### 12. 扩展模块：HoareAssertAssume
