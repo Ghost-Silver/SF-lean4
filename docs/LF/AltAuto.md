@@ -29,7 +29,7 @@ import SFLean4.LF.IndProp
 4. **证明搜索 (Search Tactics)**：利用局部假设与定理库进行回溯深搜的策略（如 `auto` / `solve_by_elim` 以及带存在元变量的 `eauto`）；
 5. **战术编程与目标模式匹配 (Tactic Programming & Pattern Matching)**：在 Lean 4 中利用宏（`macro`）与模式匹配抽象出可复用的自定义证明策略。
 
-本章是 `Imp` 与 `Auto` 章节之外的一条轻量级进阶路径，以我们在 [IndProp](file:///Users/ghostface/LuoJin/SF-lean4/SFLean4/LF/IndProp.lean)
+本章是 `Imp` 与 `Auto` 章节之外的一条轻量级进阶路径，以我们在 [IndProp](/LF/IndProp)
 中形式化的**正则表达式匹配**作为核心案例。
 
 ```lean
@@ -46,7 +46,7 @@ open exp_match
 
 ### 引入案例：正则表达式化简
 
-在 [IndProp](file:///Users/ghostface/LuoJin/SF-lean4/SFLean4/LF/IndProp.lean) 中，
+在 [IndProp](/LF/IndProp) 中，
 我们定义了正则表达式及其归纳匹配谓词 `s =~ re`。
 一个语言可以由多种形式的正则表达式所表示。
 例如：空串与任意表达式的拼接 `App EmptyStr re` 所匹配的字符串集合，与 `re` 本身完全一致。
@@ -732,7 +732,7 @@ def manual_grade_for_re_opt_match'' : Option (Nat × String) := none
 
 ### 🎯 练习：`pumping_redux` <Badge type="warning" text="3 星 · advanced, optional" />
 
-利用 `auto`、`omega` 等自动化策略重构 [IndProp](file:///Users/ghostface/LuoJin/SF-lean4/SFLean4/LF/IndProp.lean)
+利用 `auto`、`omega` 等自动化策略重构 [IndProp](/LF/IndProp)
 中的弱泵引理（Weak Pumping Lemma）。
 
 ```lean

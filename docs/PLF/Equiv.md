@@ -17,7 +17,7 @@ set_option linter.unusedVariables false
 
 ## 第一章：程序等价性 (Equiv: Program Equivalence)
 
-在卷一《逻辑基础》(LF) 的 [Imp](file:///Users/ghostface/LuoJin/SF-lean4/SFLean4/LF/Imp.lean) 章节中，
+在卷一《逻辑基础》(LF) 的 [Imp](/LF/Imp) 章节中，
 我们形式化定义了简单命令式语言 Imp 的语法以及基于大步操作语义（Big-Step Operational Semantics）的求值关系 `st =[ c ]=> st'`。
 在那个阶段，我们关注的是单个具体程序的执行与性质验证（例如证明阶乘程序的正确性、大步语义与小步函数求值的一致性等）。
 

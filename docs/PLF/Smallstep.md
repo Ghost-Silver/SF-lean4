@@ -22,7 +22,7 @@ set_option linter.unusedVariables false
 
 ## 第五章：小步操作语义 (Smallstep: Small-Step Operational Semantics)
 
-在卷一《逻辑基础》(LF) 的 [Imp](file:///Users/ghostface/LuoJin/SF-lean4/SFLean4/LF/Imp.lean) 章节中，
+在卷一《逻辑基础》(LF) 的 [Imp](/LF/Imp) 章节中，
 我们定义了命令式语言 Imp 的**大步操作语义（Big-Step Operational Semantics，亦称自然语义 Natural Semantics）**：
 求值关系形如 `st =[ c ]=> st'`，直接建立程序的初始状态到最终停机状态之间的映射。
 

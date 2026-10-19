@@ -125,7 +125,7 @@ theorem hoare_asgn : ∀ (Q : Assertion) (X : String) (a : aexp),
 在 SF-lean4 中，我们确立了**代码即唯一真理（Single Source of Truth）**原则：
 - 所有 57 个章节的纯正形式化代码全部存放在 `SFLean4/` 源码目录中；
 - 教学散文采用 `/-! ... -/` 文学化注释与代码紧密相连；
-- 自研自动化管道 [`scripts/build_docs.py`](file:///Users/ghostface/LuoJin/SF-lean4/scripts/build_docs.py)，实时将 Lean 源码抽离、过滤纯符号边框、将习题规范化转换为带星级 Badge 的精美卡片，并自动生成结构化导航树。
+- 自研自动化管道 [`scripts/build_docs.py`](https://github.com/Ghost-Silver/SF-lean4/blob/main/scripts/build_docs.py)，实时将 Lean 源码抽离、过滤纯符号边框、将习题规范化转换为带星级 Badge 的精美卡片，并自动生成结构化导航树。
 
 ### 3.2 毫秒级极速交互与顶级排版体验
 依托 VitePress 现代响应式静态站点生成器，我们实现了：

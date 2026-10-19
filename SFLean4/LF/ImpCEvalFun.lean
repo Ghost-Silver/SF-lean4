@@ -10,7 +10,7 @@ set_option linter.unusedVariables false
 
 ## 第十四章：Imp 的计算式求值函数 (ImpCEvalFun: An Evaluation Function for Imp)
 
-在 [Imp](file:///Users/ghostface/LuoJin/SF-lean4/SFLean4/LF/Imp.lean) 一章中，我们看到直接用函数来对 Imp 语言编写求值器会遭遇根本性的困难：
+在 [Imp](/LF/Imp) 一章中，我们看到直接用函数来对 Imp 语言编写求值器会遭遇根本性的困难：
 由于包含可能不终止的 `while` 循环，Imp 命令的执行是一个**偏函数（Partial Function）**。
 在先前的章节里，我们通过将求值转定义为归纳命题关系（即大步操作语义 `st =[ c ]=> st'`）巧妙地绕过了停机问题。
 
@@ -379,7 +379,7 @@ theorem ceval_and_ceval_step_coincide (c : com) (st st' : state) :
 /-!
 ### 7. 借助函数语义重新证明大步语义的确定性
 
-在 [Imp](file:///Users/ghostface/LuoJin/SF-lean4/SFLean4/LF/Imp.lean) 中，大步语义的确定性证明 `ceval_deterministic`
+在 [Imp](/LF/Imp) 中，大步语义的确定性证明 `ceval_deterministic`
 需要对复杂的归纳推导结构进行繁重的情况讨论与反演。
 现在，借助步数索引求值器的函数性质（函数输出天然是唯一的），结合等价性定理与步数单调性引理，
 我们可以给出极其简短优雅的确定性证明！

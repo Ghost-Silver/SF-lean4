@@ -15,7 +15,7 @@ set_option linter.unusedVariables false
 
 ## 第十三章：词法分析与语法分析 (ImpParser: Lexing and Parsing in Coq / Lean 4)
 
-在前一章 [Imp](file:///Users/ghostface/LuoJin/SF-lean4/SFLean4/LF/Imp.lean) 中，我们建立 Imp 语言时完全跳过了**具体语法 (Concrete Syntax)** 的处理——
+在前一章 [Imp](/LF/Imp) 中，我们建立 Imp 语言时完全跳过了**具体语法 (Concrete Syntax)** 的处理——
 即程序员手写的 ASCII 文本字符串是如何被转化为抽象语法树（AST，即数据类型 `aexp`、`bexp` 和 `com`）的。
 
 在本章中，我们将展示如何仅利用函数式编程设施，在证明助理中完整构建一个用于 Imp 语言的：

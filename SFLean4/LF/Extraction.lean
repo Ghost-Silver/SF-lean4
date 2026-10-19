@@ -146,7 +146,7 @@ def run_imp (s : String) : IO Unit := do
 /-!
 ### 5. 已验证软件工程的闭环
 
-回顾我们从 [Imp](file:///Users/ghostface/LuoJin/SF-lean4/SFLean4/LF/Imp.lean)、[ImpParser](file:///Users/ghostface/LuoJin/SF-lean4/SFLean4/LF/ImpParser.lean) 到 [ImpCEvalFun](file:///Users/ghostface/LuoJin/SF-lean4/SFLean4/LF/ImpCEvalFun.lean) 的完整探索：
+回顾我们从 [Imp](/LF/Imp)、[ImpParser](/LF/ImpParser) 到 [ImpCEvalFun](/LF/ImpCEvalFun) 的完整探索：
 1. 我们定义了抽象语法 `aexp`, `bexp`, `com`；
 2. 我们定义了大步操作语义关系 `ceval`，并在逻辑上严格证明了它的性质（确定性）；
 3. 我们编写了高效的步数索引求值函数 `ceval_step`，并形式化证明了它与大步语义的完全等价；

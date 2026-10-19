@@ -20,7 +20,7 @@ set_option linter.unusedVariables false
 
 在卷一《逻辑基础》(LF) 的最后一章中，我们开始运用所掌握的数学与逻辑工具来研究一种小型的命令式编程语言——Imp：
 - 我们为 Imp 定义了抽象语法树（AST），并引入了大步求值关系（关系式操作语义 `st =[ c ]=> st'`）。
-- 我们证明了一系列**元理论性质（Metatheoretic Properties）**，例如求值的确定性、程序转换的保意性（常量折叠）、以及程序的行为等价性（[Equiv](file:///Users/ghostface/LuoJin/SF-lean4/SFLean4/PLF/Equiv.lean) 章节）。
+- 我们证明了一系列**元理论性质（Metatheoretic Properties）**，例如求值的确定性、程序转换的保意性（常量折叠）、以及程序的行为等价性（[Equiv](/PLF/Equiv) 章节）。
 
 然而，在软件工程与形式化验证中，一个更核心的任务是**程序验证（Program Verification）**：
 即利用程序语言的形式化语义，严格证明**特定具体程序**是否满足关于其运行时行为的**形式化规约（Specification）**。

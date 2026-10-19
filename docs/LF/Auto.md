@@ -31,7 +31,7 @@ set_option linter.unusedVariables false
 4. **延迟实例化与存在元变量 (Metavariables)**：
    - 比较 Coq 的 `eapply` / `eauto` 与 Lean 4 原生对带类型元变量（Metavariables `?m`）的一等公民统一支持。
 
-作为贯穿全章的引导案例，我们将重新审视来自 [Imp](file:///Users/ghostface/LuoJin/SF-lean4/SFLean4/LF/Imp.lean) 章节的
+作为贯穿全章的引导案例，我们将重新审视来自 [Imp](/LF/Imp) 章节的
 大步操作语义确定性定理 `ceval_deterministic`，并在多次自动化重构中见证证明代码如何从数十行冗长分支精简为极简自适应脚本！
 
 ## 经典案例：手动证明的回顾

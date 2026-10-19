@@ -14,7 +14,7 @@ set_option linter.unusedVariables false
 
 ## 第三章：霍尔逻辑（第二部分）(Hoare2: Hoare Logic, Part II)
 
-在上一章 [Hoare](file:///Users/ghostface/LuoJin/SF-lean4/SFLean4/PLF/Hoare.lean) 中，我们引入了霍尔三元组 `{{ P }} c {{ Q }}` 的语义定义，
+在上一章 [Hoare](/PLF/Hoare) 中，我们引入了霍尔三元组 `{{ P }} c {{ Q }}` 的语义定义，
 并推导了一套关于 Imp 核心语法结构的完全公理化推理规则（`hoare_skip`、`hoare_asgn`、`hoare_seq`、`hoare_if`、`hoare_while` 与 `hoare_consequence`）。
 
 然而，直接手动应用这些规则进行交互式证明往往显得繁冗甚至笨拙：

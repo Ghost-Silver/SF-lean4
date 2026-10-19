@@ -198,6 +198,8 @@ def convert_lean_to_markdown(lean_content: str, chapter_title: str) -> str:
             if end_idx == -1:
                 end_idx = length
             doc_body = lean_content[idx+3:end_idx].strip()
+            # 自动纠正源码中的 file:/// 链接为对应文档路由
+            doc_body = re.sub(r'\(file:///[^\)]*?/SFLean4/(LF|PLF|VFA)/(\w+)\.lean\)', r'(/\1/\2)', doc_body)
             
             # 处理每行
             lines = doc_body.split("\n")
